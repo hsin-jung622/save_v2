@@ -58,13 +58,16 @@
                 <h1 class="text-3xl font-bold text-stone-700 tracking-tight">無痛存錢法管家</h1>
                 <p class="text-stone-500 mt-1">完美連動結餘，目標看得到進度的預算系統</p>
             </div>
-            <div class="flex items-center gap-4 text-right">
-                <button onclick="app.openHistoryModal()" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-lg transition shadow-sm border border-stone-200 flex items-center gap-2">
-                    🕰️ 查看歷史紀錄
+            <div class="flex flex-wrap items-center gap-3 text-right mt-2 md:mt-0 justify-end">
+                <button onclick="app.openSettingsModal()" class="px-3 py-2 bg-stone-50 hover:bg-stone-100 text-stone-600 font-bold rounded-lg transition border border-stone-200 text-sm shadow-sm flex items-center gap-1">
+                    ⚙️ 備份/還原
                 </button>
-                <div>
-                    <div class="text-sm text-stone-400">當前月份</div>
-                    <div class="text-2xl font-medium text-[#D4A373]" id="currentDateDisplay">--</div>
+                <button onclick="app.openHistoryModal()" class="px-3 py-2 bg-stone-50 hover:bg-stone-100 text-stone-600 font-bold rounded-lg transition border border-stone-200 text-sm shadow-sm flex items-center gap-1">
+                    🕰️ 歷史紀錄
+                </button>
+                <div class="ml-2 pl-4 border-l border-stone-200 text-right">
+                    <div class="text-[10px] text-stone-400 uppercase font-bold tracking-wider">當前月份</div>
+                    <div class="text-xl font-black text-[#D4A373]" id="currentDateDisplay">--</div>
                 </div>
             </div>
         </header>
@@ -90,8 +93,8 @@
                         <p>月底結算時，所有帳本中<strong>沒分配完、沒花完的錢</strong>都會流進這裡。如果您想幫某個目標「加碼」，只要手動修改該目標的「已累積金額」，系統就會自動從水庫扣款！</p>
                     </div>
                     <div>
-                        <h4 class="font-bold text-[#D4A373] mb-1">Q4: 信用卡袋的錢什麼時候歸零？</h4>
-                        <p>當您在現實中繳交了信用卡費後，點擊卡費控管區的「✅ 已繳清卡費」按鈕，袋子金額就會歸零。這不會影響您的支出歷史紀錄，只是幫您對帳。</p>
+                        <h4 class="font-bold text-[#D4A373] mb-1">Q4: 換手機或清除瀏覽器資料怎麼辦？</h4>
+                        <p>本系統資料儲存於您的設備中以保障隱私。請善用右上角的<strong>「⚙️ 備份/還原」</strong>功能，將資料匯出成檔案保存。換設備時只需匯入該檔案，所有紀錄就會回來了！</p>
                     </div>
                 </div>
             </div>
@@ -423,6 +426,39 @@
         </div>
     </div>
 
+    <!-- Settings / Backup Modal -->
+    <div id="settingsModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-70 flex items-center justify-center z-[150] p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform transition-transform scale-95" id="settingsModalContent">
+            <div class="p-6 border-b border-stone-200 flex justify-between items-center bg-stone-50">
+                <h3 class="font-bold text-xl text-stone-800 flex items-center gap-2">⚙️ 系統備份與設定</h3>
+                <button onclick="app.closeSettingsModal()" class="text-stone-400 hover:text-stone-700 text-2xl font-bold leading-none transition">&times;</button>
+            </div>
+            <div class="p-6 space-y-6">
+                <!-- Export -->
+                <div class="bg-stone-50 p-5 rounded-xl border border-stone-200">
+                    <h4 class="font-bold text-stone-800 text-sm mb-2 flex items-center gap-2">📥 匯出資料 (安全備份)</h4>
+                    <p class="text-xs text-stone-500 mb-4 leading-relaxed">將目前的收支設定、帳本目標與所有歷史紀錄下載為實體檔案，建議您定期備份至個人電腦或手機中保存。</p>
+                    <button onclick="app.exportData()" class="w-full py-2.5 bg-stone-800 hover:bg-stone-900 text-white rounded-lg text-sm font-bold transition shadow-sm">下載備份檔 (.json)</button>
+                </div>
+
+                <!-- Import -->
+                <div class="bg-stone-50 p-5 rounded-xl border border-stone-200">
+                    <h4 class="font-bold text-stone-800 text-sm mb-2 flex items-center gap-2">📤 匯入資料 (資料還原)</h4>
+                    <p class="text-xs text-red-500 mb-4 leading-relaxed font-bold">⚠️ 注意：匯入資料將會完全覆蓋您目前瀏覽器中的所有設定與紀錄！</p>
+                    <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="app.importData(event)">
+                    <button onclick="document.getElementById('importFileInput').click()" class="w-full py-2.5 bg-white border border-stone-300 hover:bg-stone-100 text-stone-700 rounded-lg text-sm font-bold transition shadow-sm">選擇備份檔並還原</button>
+                </div>
+
+                <!-- Clear History (Danger Zone) -->
+                <div class="bg-red-50 p-5 rounded-xl border border-red-200">
+                    <h4 class="font-bold text-red-800 text-sm mb-2 flex items-center gap-2">🗑️ 清空歷史紀錄 (危險操作)</h4>
+                    <p class="text-xs text-red-600 mb-4 leading-relaxed">如果您想重新開始，或清除測試資料，可以點擊此按鈕。您的預算與目標設定會保留，但<strong>過往的結算紀錄將永久刪除</strong>。</p>
+                    <button onclick="app.clearHistory()" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-bold transition shadow-sm">清空所有歷史紀錄</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MAIN APP LOGIC -->
     <script>
         const defaultBudget = [
@@ -469,34 +505,63 @@
                 const now = new Date();
                 document.getElementById('currentDateDisplay').textContent = `${now.getFullYear()}年 ${now.getMonth() + 1}月`;
                 
-                // State Migrations
-                if(this.data.salary !== undefined || this.data.bonus !== undefined) {
-                    if(!this.data.incomes || this.data.incomes.length === 0) {
-                        this.data.incomes = [
-                            { id: 'inc-1', name: '月薪資 (實領)', amount: this.data.salary || 0 },
-                            { id: 'inc-2', name: '額外獎金/收入', amount: this.data.bonus || 0 }
-                        ];
-                    }
-                    delete this.data.salary;
-                    delete this.data.bonus;
+                // 本地載入邏輯：如果是在沒有 Firebase 的環境下執行，嘗試讀取 LocalStorage
+                if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                    try {
+                        const localState = localStorage.getItem('smart-budget-app-state');
+                        if (localState) {
+                            const cData = JSON.parse(localState);
+                            
+                            // State Migrations
+                            if(cData.salary !== undefined || cData.bonus !== undefined) {
+                                if(!cData.incomes || cData.incomes.length === 0) {
+                                    cData.incomes = [
+                                        { id: 'inc-1', name: '月薪資 (實領)', amount: cData.salary || 0 },
+                                        { id: 'inc-2', name: '額外獎金/收入', amount: cData.bonus || 0 }
+                                    ];
+                                }
+                                delete cData.salary;
+                                delete cData.bonus;
+                            }
+                            if(!cData.incomes) cData.incomes = [{ id: 'inc-1', name: '月薪資 (實領)', amount: 0 }];
+                            if(cData.totalSavings && !cData.unallocatedSavings) cData.unallocatedSavings = cData.totalSavings;
+                            if(!cData.presaveGoals) cData.presaveGoals = [];
+                            if(!cData.savingsGoals) cData.savingsGoals = [];
+                            if(cData.ccPaidAmount === undefined) cData.ccPaidAmount = 0;
+                            if(!cData.masterRatios) cData.masterRatios = { budget: 50, presave: 20, savings: 30 };
+                            
+                            cData.presaveGoals.forEach(g => { 
+                                if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
+                            });
+                            cData.savingsGoals.forEach(g => { 
+                                if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
+                            });
+
+                            this.data = { ...this.data, ...cData };
+                            
+                            this.data.budgetItems.forEach(item => {
+                                if(item.ratio === undefined) { const dc = defaultBudget.find(c => c.name === item.name); item.ratio = dc ? dc.ratio : 10; }
+                                if(item.budget === undefined) item.budget = 0;
+                            });
+                            this.data.presaveGoals.forEach(item => {
+                                if(item.ratio === undefined) item.ratio = 10;
+                                if(item.budget === undefined) item.budget = 0;
+                            });
+                            this.data.savingsGoals.forEach(item => {
+                                if(item.ratio === undefined) item.ratio = 10;
+                                if(item.budget === undefined) item.budget = 0;
+                            });
+                        }
+                        
+                        const localHistory = localStorage.getItem('smart-budget-app-history');
+                        if (localHistory) {
+                            this.historyRecords = JSON.parse(localHistory);
+                        }
+                    } catch(e) { console.error("Local storage load error", e); }
+                    
+                    document.getElementById('loadingOverlay').classList.add('opacity-0');
+                    setTimeout(() => document.getElementById('loadingOverlay').classList.add('hidden'), 300);
                 }
-                if(!this.data.incomes) this.data.incomes = [{ id: 'inc-1', name: '月薪資 (實領)', amount: 0 }];
-                if(!this.data.presaveGoals) this.data.presaveGoals = [];
-                if(!this.data.savingsGoals) this.data.savingsGoals = [];
-                if(this.data.ccPaidAmount === undefined) this.data.ccPaidAmount = 0;
-                if(!this.data.masterRatios) this.data.masterRatios = { budget: 50, presave: 20, savings: 30 };
-                
-                // Migrate old 'current' to 'accumulated'
-                this.data.presaveGoals.forEach(g => { 
-                    if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
-                    if(g.ratio === undefined) g.ratio = 10;
-                    if(g.budget === undefined) g.budget = 0;
-                });
-                this.data.savingsGoals.forEach(g => { 
-                    if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
-                    if(g.ratio === undefined) g.ratio = 10;
-                    if(g.budget === undefined) g.budget = 0;
-                });
 
                 this.initChart();
                 this.syncInputsFromData();
@@ -550,6 +615,97 @@
                 modalContent.classList.remove('scale-100');
                 modalContent.classList.add('scale-95');
                 setTimeout(() => { document.getElementById('dialogModal').classList.add('hidden'); }, 150);
+            },
+
+            // --- Backup & Restore & Clear (Settings Modal) ---
+            openSettingsModal() {
+                const modal = document.getElementById('settingsModal');
+                const modalContent = document.getElementById('settingsModalContent');
+                modal.classList.remove('hidden');
+                setTimeout(() => { modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100'); }, 10);
+            },
+            closeSettingsModal() {
+                const modalContent = document.getElementById('settingsModalContent');
+                modalContent.classList.remove('scale-100');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => { document.getElementById('settingsModal').classList.add('hidden'); }, 150);
+            },
+            exportData() {
+                const backup = {
+                    version: "1.0",
+                    timestamp: Date.now(),
+                    state: this.data,
+                    history: this.historyRecords
+                };
+                
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                
+                const date = new Date();
+                const dateStr = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
+                downloadAnchorNode.setAttribute("download", `smart_budget_backup_${dateStr}.json`);
+                
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+                
+                this.closeSettingsModal();
+                this.showDialog('✅ 匯出成功', '資料已成功下載到您的裝置中！', 'alert');
+            },
+            importData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const backup = JSON.parse(e.target.result);
+                        if(backup && backup.state) {
+                            this.data = backup.state;
+                            this.historyRecords = backup.history || [];
+                            
+                            // Save to local storage explicitly
+                            localStorage.setItem('smart-budget-app-state', JSON.stringify(this.data));
+                            localStorage.setItem('smart-budget-app-history', JSON.stringify(this.historyRecords));
+                            
+                            // Save to cloud if applicable
+                            if (window.saveStateToCloud) window.saveStateToCloud(this.data);
+                            
+                            this.closeSettingsModal();
+                            this.showDialog('✅ 還原成功', '備份資料已成功載入！畫面將重新整理以套用設定。', 'alert', () => {
+                                window.location.reload();
+                            });
+                        } else {
+                            throw new Error("Invalid format");
+                        }
+                    } catch(err) {
+                        this.showDialog('❌ 還原失敗', '您選擇的檔案格式錯誤或已損毀。請確認這是本系統匯出的 .json 備份檔。', 'alert');
+                    }
+                    // Reset input
+                    event.target.value = '';
+                };
+                reader.readAsText(file);
+            },
+            clearHistory() {
+                this.closeSettingsModal();
+                setTimeout(() => {
+                    this.showDialog('⚠️ 警告：清空歷史紀錄', '您確定要刪除「所有」的歷史結算紀錄嗎？\n此操作無法復原，如果您尚未匯出備份，請三思！\n\n(註：此操作不會影響您當前的預算與目標設定)', 'confirm', () => {
+                        this.historyRecords = [];
+                        
+                        // Clear local storage
+                        localStorage.removeItem('smart-budget-app-history');
+                        
+                        // Try clear cloud if function available
+                        if (window.clearCloudHistory) {
+                            window.clearCloudHistory();
+                        }
+                        
+                        setTimeout(() => {
+                            this.showDialog('✅ 清空完成', '所有的歷史紀錄已經被成功刪除！', 'alert');
+                        }, 300);
+                    });
+                }, 200); // Wait for settings modal to fully close before showing dialog
             },
 
             // --- TABS LOGIC ---
@@ -627,13 +783,17 @@
                 this.calculate();
                 this.requestSave();
             },
+            
             requestSave() {
-                if (window.db && window.user) {
-                    clearTimeout(this.saveTimeout);
-                    this.saveTimeout = setTimeout(() => {
-                        if(window.saveStateToCloud) window.saveStateToCloud(this.data);
-                    }, 1500);
-                }
+                clearTimeout(this.saveTimeout);
+                this.saveTimeout = setTimeout(() => {
+                    if (window.saveStateToCloud) {
+                        window.saveStateToCloud(this.data);
+                    } else {
+                        // Local fallback saving
+                        localStorage.setItem('smart-budget-app-state', JSON.stringify(this.data));
+                    }
+                }, 1000);
             },
 
             getDiscretionary() {
@@ -971,7 +1131,7 @@
                                 </div>
                             </div>
                             <div class="bg-stone-50 px-3 py-2 rounded-lg border border-stone-100 focus-within:border-[#D4A373] transition-colors" title="修改此欄位將影響未分配結餘水庫">
-                                <label class="text-[10px] text-stone-400 block font-bold text-[#D4A373]">已累積 (可修改)</label>
+                                <label class="text-[10px] text-stone-400 block font-bold text-[#D4A373]">已累積 (可手動修改)</label>
                                 <div class="flex items-center text-stone-700 font-bold mt-1">
                                     $ <input type="number" value="${accumulated}" onchange="app.handleGoalFund('${type}', ${index}, this.value, ${accumulated})" class="w-full bg-transparent focus:outline-none ml-1 text-sm">
                                 </div>
@@ -1167,6 +1327,7 @@
                     let totalDebt = this.data.hasDebt ? this.data.debts.reduce((a,b)=>a+(b.monthly||0),0) : 0;
 
                     const historyPayload = {
+                        id: Date.now().toString(),
                         timestamp: Date.now(),
                         monthLabel: monthStr,
                         income: totalIncome,
@@ -1180,6 +1341,10 @@
 
                     if (window.saveHistoryToCloud) {
                         window.saveHistoryToCloud(historyPayload);
+                    } else {
+                        // 本地歷史紀錄備援
+                        this.historyRecords.push(historyPayload);
+                        localStorage.setItem('smart-budget-app-history', JSON.stringify(this.historyRecords));
                     }
 
                     // Move budget to accumulated
@@ -1476,7 +1641,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, writeBatch, getDocs } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
 
         let firebaseConfig = null;
         try { if (typeof __firebase_config !== 'undefined') firebaseConfig = JSON.parse(__firebase_config); } catch(e) {}
@@ -1503,6 +1668,20 @@
                         await setDoc(historyRef, historyPayload);
                     }
                 };
+                
+                window.clearCloudHistory = async () => {
+                    if (window.db && window.user) {
+                        try {
+                            const historyCol = collection(window.db, 'artifacts', window.appId, 'users', window.user.uid, 'history');
+                            const snapshot = await getDocs(historyCol);
+                            const batch = writeBatch(window.db);
+                            snapshot.docs.forEach((document) => {
+                                batch.delete(document.ref);
+                            });
+                            await batch.commit();
+                        } catch(e) { console.error("Error clearing cloud history", e); }
+                    }
+                };
 
                 const initAuth = async () => {
                     if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -1522,7 +1701,6 @@
                                 if (snap.exists()) {
                                     const cData = snap.data();
                                     
-                                    // Handle state migrations
                                     if(cData.salary !== undefined || cData.bonus !== undefined) {
                                         if(!cData.incomes || cData.incomes.length === 0) {
                                             cData.incomes = [
