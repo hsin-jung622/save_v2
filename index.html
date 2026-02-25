@@ -376,6 +376,45 @@
         </div>
     </div>
 
+    <!-- Edit Transaction Modal -->
+    <div id="editModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-60 flex items-center justify-center z-[150] p-4 transition-opacity">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl">
+            <h3 class="font-bold text-xl mb-4 text-stone-800 border-b border-stone-100 pb-2">✏️ 編輯支出紀錄</h3>
+            <input type="hidden" id="editTxId">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-stone-600 mb-1">支出金額</label>
+                <input type="number" id="editTxAmount" class="input-std text-lg font-bold text-stone-700">
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-stone-600 mb-1">付款方式</label>
+                <select id="editTxMethod" class="input-std bg-white text-stone-700">
+                    <option value="cash">💵 現金</option>
+                    <option value="credit">💳 刷卡</option>
+                </select>
+            </div>
+            <div class="flex justify-end gap-3 pt-2 border-t border-stone-100">
+                <button onclick="app.closeEditModal()" class="px-5 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg text-sm text-stone-600 font-medium transition">取消</button>
+                <button onclick="app.saveEditTx()" class="px-5 py-2 bg-[#D4A373] hover:bg-[#C39262] text-white rounded-lg text-sm font-bold transition shadow-sm">儲存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-70 flex items-center justify-center z-[150] p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl w-full max-w-2xl h-[85vh] flex flex-col shadow-2xl overflow-hidden transform transition-transform">
+            <div class="p-6 border-b border-stone-200 flex justify-between items-center bg-stone-50">
+                <div>
+                    <h3 class="font-bold text-2xl text-stone-800 flex items-center gap-2">🕰️ 歷史紀錄歸檔</h3>
+                    <p class="text-xs text-stone-500 mt-1">點擊月份卡片可展開查看詳細收支與明細</p>
+                </div>
+                <button onclick="app.closeHistoryModal()" class="text-stone-400 hover:text-stone-700 text-3xl font-bold leading-none w-10 h-10 rounded-full hover:bg-stone-200 transition flex items-center justify-center">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 scroller bg-stone-100/50" id="historyListContainer">
+                <!-- History Items Injected Here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Settings / Backup Modal -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-70 flex items-center justify-center z-[150] p-4 transition-opacity duration-300">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform transition-transform scale-95" id="settingsModalContent">
@@ -454,7 +493,8 @@
 
             init() {
                 const now = new Date();
-                document.getElementById('currentDateDisplay').textContent = `${now.getFullYear()}年 ${now.getMonth() + 1}月`;
+                const dateDisplay = document.getElementById('currentDateDisplay');
+                if(dateDisplay) dateDisplay.textContent = `${now.getFullYear()}年 ${now.getMonth() + 1}月`;
                 
                 // 本地載入邏輯：如果是在沒有 Firebase 的環境下執行，嘗試讀取 LocalStorage
                 if (typeof __firebase_config === 'undefined' || !__firebase_config) {
@@ -506,13 +546,16 @@
                         
                         const localHistory = localStorage.getItem('smart-budget-app-history');
                         if (localHistory) {
-                            this.historyRecords = JSON.parse(localHistory);
+                            try {
+                                const parsedHist = JSON.parse(localHistory);
+                                this.historyRecords = Array.isArray(parsedHist) ? parsedHist : [];
+                            } catch(e) { this.historyRecords = []; }
                         }
                     } catch(e) { console.error("Local storage load error", e); }
                     
                     const loader = document.getElementById('loadingOverlay');
                     if (loader) {
-                        loader.classList.add('opacity-0');
+                        loader.classList.add('opacity-0', 'pointer-events-none');
                         setTimeout(() => loader.classList.add('hidden'), 300);
                     }
                 }
@@ -527,13 +570,17 @@
 
             // --- Custom Dialog System ---
             showDialog(title, message, type = 'alert', onConfirm = null) {
-                document.getElementById('dialogTitle').innerHTML = title;
-                document.getElementById('dialogMessage').innerHTML = message.replace(/\n/g, '<br>');
+                const titleEl = document.getElementById('dialogTitle');
+                const msgEl = document.getElementById('dialogMessage');
                 const btnContainer = document.getElementById('dialogButtons');
-                btnContainer.innerHTML = '';
-                
                 const modal = document.getElementById('dialogModal');
                 const modalContent = document.getElementById('dialogModalContent');
+
+                if(!titleEl || !msgEl || !btnContainer || !modal || !modalContent) return;
+
+                titleEl.innerHTML = title;
+                msgEl.innerHTML = message.replace(/\n/g, '<br>');
+                btnContainer.innerHTML = '';
                 
                 if (type === 'confirm') {
                     const cancelBtn = document.createElement('button');
@@ -566,23 +613,30 @@
             },
             closeDialog() {
                 const modalContent = document.getElementById('dialogModalContent');
-                modalContent.classList.remove('scale-100');
-                modalContent.classList.add('scale-95');
-                setTimeout(() => { document.getElementById('dialogModal').classList.add('hidden'); }, 150);
+                const modal = document.getElementById('dialogModal');
+                if(modalContent) {
+                    modalContent.classList.remove('scale-100');
+                    modalContent.classList.add('scale-95');
+                }
+                setTimeout(() => { if(modal) modal.classList.add('hidden'); }, 150);
             },
 
             // --- Backup & Restore & Clear (Settings Modal) ---
             openSettingsModal() {
                 const modal = document.getElementById('settingsModal');
                 const modalContent = document.getElementById('settingsModalContent');
+                if(!modal || !modalContent) return;
                 modal.classList.remove('hidden');
                 setTimeout(() => { modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100'); }, 10);
             },
             closeSettingsModal() {
                 const modalContent = document.getElementById('settingsModalContent');
-                modalContent.classList.remove('scale-100');
-                modalContent.classList.add('scale-95');
-                setTimeout(() => { document.getElementById('settingsModal').classList.add('hidden'); }, 150);
+                const modal = document.getElementById('settingsModal');
+                if(modalContent) {
+                    modalContent.classList.remove('scale-100');
+                    modalContent.classList.add('scale-95');
+                }
+                setTimeout(() => { if(modal) modal.classList.add('hidden'); }, 150);
             },
             exportData() {
                 const backup = {
@@ -617,7 +671,7 @@
                         const backup = JSON.parse(e.target.result);
                         if(backup && backup.state) {
                             this.data = backup.state;
-                            this.historyRecords = backup.history || [];
+                            this.historyRecords = Array.isArray(backup.history) ? backup.history : [];
                             
                             localStorage.setItem('smart-budget-app-state', JSON.stringify(this.data));
                             localStorage.setItem('smart-budget-app-history', JSON.stringify(this.historyRecords));
@@ -665,6 +719,8 @@
                 tabs.forEach(t => {
                     const btn = document.getElementById(`tab-btn-${t}`);
                     const content = document.getElementById(`tab-content-${t}`);
+                    if(!btn || !content) return;
+
                     if (t === tabName) {
                         btn.className = `pb-3 px-3 text-base md:text-lg font-bold text-[${colors[t]}] border-b-[3px] border-[${colors[t]}] transition-colors focus:outline-none whitespace-nowrap`;
                         content.classList.add('active');
@@ -673,22 +729,31 @@
                         content.classList.remove('active');
                     }
                 });
-                document.getElementById('bookTabsSection').scrollIntoView({behavior: 'smooth', block: 'start'});
+                const tabsSection = document.getElementById('bookTabsSection');
+                if(tabsSection) tabsSection.scrollIntoView({behavior: 'smooth', block: 'start'});
             },
 
             syncInputsFromData() {
                 if(this.data.hasDebt) {
-                    document.getElementById('debtContainer').classList.remove('hidden');
-                    document.getElementById('noDebtMessage').classList.add('hidden');
+                    const debtContainer = document.getElementById('debtContainer');
+                    const noDebtMessage = document.getElementById('noDebtMessage');
                     const btn = document.getElementById('debtToggleBtn');
-                    btn.textContent = "切換為無負債";
-                    btn.classList.add('bg-red-100', 'text-red-600');
+                    
+                    if(debtContainer) debtContainer.classList.remove('hidden');
+                    if(noDebtMessage) noDebtMessage.classList.add('hidden');
+                    if(btn) {
+                        btn.textContent = "切換為無負債";
+                        btn.classList.add('bg-red-100', 'text-red-600');
+                    }
                 }
             },
 
             initChart() {
+                const chartEl = document.getElementById('allocationChart');
+                if(!chartEl) return;
+
                 if(this.charts.allocation) this.charts.allocation.destroy();
-                const ctx = document.getElementById('allocationChart').getContext('2d');
+                const ctx = chartEl.getContext('2d');
                 this.charts.allocation = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
@@ -779,18 +844,22 @@
             // --- Core Calculation ---
             calculate() {
                 const totalIncome = this.data.incomes.reduce((sum, item) => sum + (item.amount || 0), 0);
-                document.getElementById('totalIncomeDisplay').textContent = this.formatMoney(totalIncome);
+                const incDisplay = document.getElementById('totalIncomeDisplay');
+                if(incDisplay) incDisplay.textContent = this.formatMoney(totalIncome);
 
                 const totalFixed = this.data.fixedExpenses.reduce((sum, item) => sum + (item.amount || 0), 0);
-                document.getElementById('totalFixedDisplay').textContent = this.formatMoney(totalFixed);
+                const fixedDisplay = document.getElementById('totalFixedDisplay');
+                if(fixedDisplay) fixedDisplay.textContent = this.formatMoney(totalFixed);
 
                 let totalDebtMonthly = 0;
                 if (this.data.hasDebt) {
                     totalDebtMonthly = this.data.debts.reduce((sum, item) => sum + (item.monthly || 0), 0);
                     let totalDebtPrincipal = this.data.debts.reduce((sum, item) => sum + (item.principal || 0), 0);
-                    document.getElementById('totalPrincipalDisplay').textContent = this.formatMoney(totalDebtPrincipal);
+                    const prinDisplay = document.getElementById('totalPrincipalDisplay');
+                    if(prinDisplay) prinDisplay.textContent = this.formatMoney(totalDebtPrincipal);
                 }
-                document.getElementById('totalDebtDisplay').textContent = this.formatMoney(totalDebtMonthly);
+                const debtDisplay = document.getElementById('totalDebtDisplay');
+                if(debtDisplay) debtDisplay.textContent = this.formatMoney(totalDebtMonthly);
 
                 let discretionary = Math.max(0, totalIncome - totalFixed - totalDebtMonthly);
                 
@@ -834,36 +903,43 @@
                     }
                 }
 
-                document.getElementById('discretionaryDisplay').textContent = this.formatMoney(discretionary);
+                const discDisplay = document.getElementById('discretionaryDisplay');
+                if(discDisplay) discDisplay.textContent = this.formatMoney(discretionary);
 
                 // Update Dashboard Values (Inputs)
-                document.getElementById('master-ratio-budget').value = bRatio;
-                document.getElementById('master-amount-budget').value = budgetPool;
-                
-                document.getElementById('master-ratio-presave').value = pRatio;
-                document.getElementById('master-amount-presave').value = presaveAmt;
-                
-                document.getElementById('master-ratio-savings').value = sRatio;
-                document.getElementById('master-amount-savings').value = savingsAmt;
+                const safeVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+                const safeTxt = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+
+                safeVal('master-ratio-budget', bRatio);
+                safeVal('master-amount-budget', budgetPool);
+                safeVal('master-ratio-presave', pRatio);
+                safeVal('master-amount-presave', presaveAmt);
+                safeVal('master-ratio-savings', sRatio);
+                safeVal('master-amount-savings', savingsAmt);
                 
                 // Update Tab Headers
-                document.getElementById('headerPresaveAlloc').textContent = this.formatMoney(presaveAmt);
-                document.getElementById('headerSavingsAlloc').textContent = this.formatMoney(savingsAmt);
-                document.querySelectorAll('.unallocatedDisplayGlobal').forEach(el => el.textContent = this.formatMoney(this.data.unallocatedSavings || 0));
+                safeTxt('headerPresaveAlloc', this.formatMoney(presaveAmt));
+                safeTxt('headerSavingsAlloc', this.formatMoney(savingsAmt));
+                
+                document.querySelectorAll('.unallocatedDisplayGlobal').forEach(el => {
+                    if(el) el.textContent = this.formatMoney(this.data.unallocatedSavings || 0);
+                });
 
                 // Chart Update
-                let cLabels = ['預算本 (生活)', '預存本 (未來)', '存錢本 (投資/還款)'];
-                let cColors = ['#D4A373', '#A3B18A', '#E63946'];
-                let cData = [budgetPool, presaveAmt, savingsAmt];
-                if(mainUnallocated > 0) {
-                    cLabels.push('待分配額度');
-                    cColors.push('#E7E5E4');
-                    cData.push(mainUnallocated);
+                if(this.charts.allocation) {
+                    let cLabels = ['預算本 (生活)', '預存本 (未來)', '存錢本 (投資/還款)'];
+                    let cColors = ['#D4A373', '#A3B18A', '#E63946'];
+                    let cData = [budgetPool, presaveAmt, savingsAmt];
+                    if(mainUnallocated > 0) {
+                        cLabels.push('待分配額度');
+                        cColors.push('#E7E5E4');
+                        cData.push(mainUnallocated);
+                    }
+                    this.charts.allocation.data.labels = cLabels;
+                    this.charts.allocation.data.datasets[0].backgroundColor = cColors;
+                    this.charts.allocation.data.datasets[0].data = cData;
+                    this.charts.allocation.update();
                 }
-                this.charts.allocation.data.labels = cLabels;
-                this.charts.allocation.data.datasets[0].backgroundColor = cColors;
-                this.charts.allocation.data.datasets[0].data = cData;
-                this.charts.allocation.update();
 
                 // Auto-Distribute internal pools if uninitialized
                 if (this._getSum(this.data.budgetItems, 'budget') === 0 && budgetPool > 0 && !this.data.isManualBudget) 
@@ -950,6 +1026,7 @@
 
             _updateTabBadge(badgeId, unallocated) {
                 const badge = document.getElementById(badgeId);
+                if (!badge) return;
                 badge.className = 'text-[11px] font-bold px-3 py-1.5 rounded-full shadow-inner transition-colors border ';
                 if (unallocated === 0) {
                     badge.className += 'bg-stone-100 text-stone-500 border-stone-200';
@@ -965,6 +1042,7 @@
 
             renderBudgetCategories(budgetPool) {
                 const listContainer = document.getElementById('budgetList');
+                if(!listContainer) return;
                 listContainer.innerHTML = '';
                 
                 let totalAllocated = this._getSum(this.data.budgetItems, 'budget');
@@ -1028,6 +1106,8 @@
             // --- GOAL TRACKING RENDERER ---
             renderGoals(type, poolAmount) {
                 const listContainer = document.getElementById(`${type}List`);
+                if(!listContainer) return;
+
                 const goals = type === 'presave' ? this.data.presaveGoals : this.data.savingsGoals;
                 const themeColor = type === 'presave' ? '#A3B18A' : '#E63946';
                 const hoverColor = type === 'presave' ? 'hover:border-[#A3B18A]' : 'hover:border-[#E63946]';
@@ -1128,6 +1208,7 @@
                 const item = this.data.budgetItems[index];
                 const amtInput = document.getElementById(`spend-amt-${index}`);
                 const methodSelect = document.getElementById(`spend-method-${index}`);
+                if(!amtInput || !methodSelect) return;
                 
                 const amount = Number(amtInput.value);
                 if (amount > 0) {
@@ -1147,6 +1228,7 @@
 
             renderTransactions() {
                 const container = document.getElementById('txList');
+                if (!container) return;
                 if (this.data.transactions.length === 0) {
                     container.innerHTML = `<div class="text-stone-400 text-xs italic text-center py-6 flex flex-col items-center gap-2"><span class="text-2xl">📝</span>尚無支出紀錄</div>`;
                     return;
@@ -1188,16 +1270,30 @@
             openEditModal(id) {
                 const tx = this.data.transactions.find(t => t.id === id);
                 if (!tx) return;
-                document.getElementById('editTxId').value = tx.id;
-                document.getElementById('editTxAmount').value = tx.amount;
-                document.getElementById('editTxMethod').value = tx.method;
-                document.getElementById('editModal').classList.remove('hidden');
+                
+                const idEl = document.getElementById('editTxId');
+                const amtEl = document.getElementById('editTxAmount');
+                const methodEl = document.getElementById('editTxMethod');
+                const modalEl = document.getElementById('editModal');
+                
+                if(idEl) idEl.value = tx.id;
+                if(amtEl) amtEl.value = tx.amount;
+                if(methodEl) methodEl.value = tx.method;
+                if(modalEl) modalEl.classList.remove('hidden');
             },
-            closeEditModal() { document.getElementById('editModal').classList.add('hidden'); },
+            closeEditModal() { 
+                const modalEl = document.getElementById('editModal');
+                if(modalEl) modalEl.classList.add('hidden'); 
+            },
             saveEditTx() {
-                const id = Number(document.getElementById('editTxId').value);
-                const newAmount = Number(document.getElementById('editTxAmount').value);
-                const newMethod = document.getElementById('editTxMethod').value;
+                const idEl = document.getElementById('editTxId');
+                const amtEl = document.getElementById('editTxAmount');
+                const methodEl = document.getElementById('editTxMethod');
+                if(!idEl || !amtEl || !methodEl) return;
+                
+                const id = Number(idEl.value);
+                const newAmount = Number(amtEl.value);
+                const newMethod = methodEl.value;
                 if (newAmount > 0) {
                     const txIndex = this.data.transactions.findIndex(t => t.id === id);
                     if (txIndex !== -1) {
@@ -1216,11 +1312,13 @@
                     .reduce((sum, tx) => sum + tx.amount, 0);
                 
                 let currentPouch = Math.max(0, totalCreditSpend - (this.data.ccPaidAmount || 0));
-                document.getElementById('ccPouchTotal').textContent = this.formatMoney(currentPouch);
+                const pouchEl = document.getElementById('ccPouchTotal');
+                if(pouchEl) pouchEl.textContent = this.formatMoney(currentPouch);
 
                 const totalSpent = this.data.transactions.reduce((sum, tx) => sum + tx.amount, 0);
                 const balance = Math.max(0, totalBudgetAmt - totalSpent);
-                document.getElementById('monthEndBalance').textContent = this.formatMoney(balance);
+                const balEl = document.getElementById('monthEndBalance');
+                if(balEl) balEl.textContent = this.formatMoney(balance);
             },
 
             clearCCPouch() {
@@ -1256,8 +1354,11 @@
                 // Add up all unspent budget + unallocated amounts in presave and savings
                 let totalToReservoir = budgetBalance + presaveBalance + savingsBalance;
                 
-                document.getElementById('monthEndBalance').textContent = this.formatMoney(totalToReservoir);
-                document.getElementById('expectedReservoir').textContent = this.formatMoney((this.data.unallocatedSavings || 0) + totalToReservoir);
+                const monthEndEl = document.getElementById('monthEndBalance');
+                if(monthEndEl) monthEndEl.textContent = this.formatMoney(totalToReservoir);
+                
+                const expectedEl = document.getElementById('expectedReservoir');
+                if(expectedEl) expectedEl.textContent = this.formatMoney((this.data.unallocatedSavings || 0) + totalToReservoir);
                 
                 this.resetStats = { budgetPool, totalSpent, totalToReservoir };
             },
@@ -1322,14 +1423,20 @@
             },
 
             openHistoryModal() {
-                document.getElementById('historyModal').classList.remove('hidden');
-                this.renderHistoryList();
+                const modal = document.getElementById('historyModal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    this.renderHistoryList();
+                }
             },
             closeHistoryModal() {
-                document.getElementById('historyModal').classList.add('hidden');
+                const modal = document.getElementById('historyModal');
+                if (modal) modal.classList.add('hidden');
             },
             renderHistoryList() {
                 const container = document.getElementById('historyListContainer');
+                if (!container) return;
+                
                 if (this.historyRecords.length === 0) {
                     container.innerHTML = `
                         <div class="text-center text-stone-400 py-16 flex flex-col items-center">
@@ -1352,8 +1459,8 @@
                     header.onclick = () => {
                         const detail = document.getElementById(`hist-detail-${index}`);
                         const icon = document.getElementById(`hist-icon-${index}`);
-                        detail.classList.toggle('hidden');
-                        icon.style.transform = detail.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+                        if(detail) detail.classList.toggle('hidden');
+                        if(icon && detail) icon.style.transform = detail.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
                     };
                     header.innerHTML = `
                         <div class="flex items-center gap-4">
@@ -1426,6 +1533,7 @@
             // --- List Management ---
             renderIncomeList() {
                 const container = document.getElementById('incomeList');
+                if(!container) return;
                 container.innerHTML = '';
                 this.data.incomes.forEach((item, index) => {
                     const div = document.createElement('div');
@@ -1440,6 +1548,7 @@
             },
             renderFixedList() {
                 const container = document.getElementById('fixedList');
+                if(!container) return;
                 container.innerHTML = '';
                 this.data.fixedExpenses.forEach((item, index) => {
                     const div = document.createElement('div');
@@ -1454,6 +1563,7 @@
             },
             renderDebtList() {
                 const container = document.getElementById('debtList');
+                if(!container) return;
                 container.innerHTML = '';
                 this.data.debts.forEach((item, index) => {
                     const div = document.createElement('div');
@@ -1562,16 +1672,20 @@
                 const btn = document.getElementById('debtToggleBtn');
                 const msg = document.getElementById('noDebtMessage');
                 if (this.data.hasDebt) {
-                    container.classList.remove('hidden');
-                    msg.classList.add('hidden');
-                    btn.textContent = "切換為無負債";
-                    btn.classList.add('bg-red-100', 'text-red-600', 'font-bold');
+                    if(container) container.classList.remove('hidden');
+                    if(msg) msg.classList.add('hidden');
+                    if(btn) {
+                        btn.textContent = "切換為無負債";
+                        btn.classList.add('bg-red-100', 'text-red-600', 'font-bold');
+                    }
                     if(this.data.debts.length === 0) this.addItem('debt');
                 } else {
-                    container.classList.add('hidden');
-                    msg.classList.remove('hidden');
-                    btn.textContent = "我有負債";
-                    btn.classList.remove('bg-red-100', 'text-red-600', 'font-bold');
+                    if(container) container.classList.add('hidden');
+                    if(msg) msg.classList.remove('hidden');
+                    if(btn) {
+                        btn.textContent = "我有負債";
+                        btn.classList.remove('bg-red-100', 'text-red-600', 'font-bold');
+                    }
                 }
                 this.calculateAndSave();
             },
@@ -1596,7 +1710,14 @@
         try { if (typeof __firebase_config !== 'undefined') firebaseConfig = JSON.parse(__firebase_config); } catch(e) {}
         
         window.appId = typeof __app_id !== 'undefined' ? __app_id : 'smart-budget-app';
-        const loadingOverlay = document.getElementById('loadingOverlay');
+        
+        const hideLoader = () => {
+            const loader = document.getElementById('loadingOverlay');
+            if (loader) {
+                loader.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => loader.classList.add('hidden'), 300);
+            }
+        };
         
         if (firebaseConfig) {
             try {
@@ -1703,25 +1824,21 @@
                                 }, (err) => console.error("History listen error", err));
                             } catch (err) { console.error("Set history listener err", err); }
                             
-                            if (loadingOverlay) loadingOverlay.classList.add('opacity-0');
-                            setTimeout(() => { if (loadingOverlay) loadingOverlay.classList.add('hidden'); }, 300);
+                            hideLoader();
                             window.app.init();
                         }
                     });
                 }).catch(e => {
                     console.error("Auth err", e);
-                    if (loadingOverlay) loadingOverlay.classList.add('opacity-0');
-                    setTimeout(() => { if (loadingOverlay) loadingOverlay.classList.add('hidden'); }, 300);
+                    hideLoader();
                 });
 
             } catch(e) {
                 console.error("Firebase init err", e);
-                if (loadingOverlay) loadingOverlay.classList.add('opacity-0');
-                setTimeout(() => { if (loadingOverlay) loadingOverlay.classList.add('hidden'); }, 300);
+                hideLoader();
             }
         } else {
-            if (loadingOverlay) loadingOverlay.classList.add('opacity-0');
-            setTimeout(() => { if (loadingOverlay) loadingOverlay.classList.add('hidden'); }, 300);
+            hideLoader();
         }
     </script>
 </body>
