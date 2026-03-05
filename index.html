@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>無痛存錢法 | 智慧預算管家</title>
     
-    <!-- PWA & Mobile App Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="存錢管家">
     <meta name="theme-color" content="#D4A373">
     
-    <!-- Inline PWA Manifest -->
-    <link rel="manifest" href='data:application/manifest+json,{"name":"無痛存錢法管家","short_name":"存錢管家","start_url":".","display":"standalone","background_color":"#FAF9F6","theme_color":"#D4A373","icons":[{"src":"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48dGV4dCB5PSIuOWVtIiBmb250LXNpemU9IjkwIj7wn5KyPC90ZXh0Pjwvc3ZnPg==","sizes":"192x192","type":"image/svg+xml"}]}'>
+    <link rel="manifest" href='data:application/manifest+json,{"name":"無痛存錢法管家","short_name":"存錢管家","start_url":".","display":"standalone","background_color":"#FAF9F6","theme_color":"#D4A373","icons":}'>
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI0Q0QTM3MyIvPjx0ZXh0IHg9IjUwIiB5PSI1NCIgZm9udC1zaXplPSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgYWxpZ25tZW50LWJhc2VsaW5lPSJtaWRkbGUiPjwvcmVjdD48dGV4dCB4PSI1MCIgeT0iNjAiIGZvbnQtc2l6ZT0iNjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGFsaWdubWVudC1iYXNlbGluZT0ibWlkZGxlIj7wn5KyPC90ZXh0Pjwvc3ZnPg==">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,37 +19,37 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #FAF9F6; color: #44403C; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
-        .chart-container { position: relative; width: 100%; max-width: 450px; margin: 0 auto; height: 280px; max-height: 320px; cursor: pointer; }
-        .card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02); transition: all 0.3s ease; }
-        .card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); }
-        .input-std { border: 1px solid #E7E5E4; border-radius: 8px; padding: 0.5rem; width: 100%; outline: none; transition: border-color 0.2s; }
-        .input-std:focus { border-color: #D4A373; box-shadow: 0 0 0 2px rgba(212, 163, 115, 0.2); }
+       .chart-container { position: relative; width: 100%; max-width: 450px; margin: 0 auto; height: 280px; max-height: 320px; cursor: pointer; }
+       .card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02); transition: all 0.3s ease; }
+       .card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); }
+       .input-std { border: 1px solid #E7E5E4; border-radius: 8px; padding: 0.5rem; width: 100%; outline: none; transition: border-color 0.2s; }
+       .input-std:focus { border-color: #D4A373; box-shadow: 0 0 0 2px rgba(212, 163, 115, 0.2); }
+        /* Custom Scrollbar */
+       .scroller::-webkit-scrollbar { width: 6px; }
+       .scroller::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+       .scroller::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 3px; }
         
-        .scroller::-webkit-scrollbar { width: 6px; }
-        .scroller::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
-        .scroller::-webkit-scrollbar-thumb { background: #D6D3D1; border-radius: 3px; }
-        
+        /* Hide arrows from number inputs */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
 
         #loadingOverlay { backdrop-filter: blur(4px); }
         
-        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
-        .tab-content.active { display: block; }
+        /* Tab Transitions */
+       .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+       .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="p-4 md:p-6 min-h-screen relative pb-10">
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-stone-100 bg-opacity-80 z-[100] flex flex-col items-center justify-center transition-opacity duration-300">
-        <div class="w-12 h-12 border-4 border-[#D4A373] border-t-transparent rounded-full animate-spin"></div>
+    <div id="loadingOverlay" class="fixed inset-0 bg-stone-100 bg-opacity-80 z- flex flex-col items-center justify-center transition-opacity duration-300">
+        <div class="w-12 h-12 border-4 border- border-t-transparent rounded-full animate-spin"></div>
         <p class="mt-4 text-stone-600 font-bold tracking-wide">系統載入中...</p>
     </div>
 
-    <!-- Unified Custom Dialog Modal -->
-    <div id="dialogModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-60 flex items-center justify-center z-[200] p-4 transition-opacity">
+    <div id="dialogModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-60 flex items-center justify-center z- p-4 transition-opacity">
         <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl transform transition-transform scale-95" id="dialogModalContent">
             <h3 class="font-bold text-xl mb-3 text-stone-800 flex items-center gap-2" id="dialogTitle">提示</h3>
             <p class="text-sm text-stone-600 mb-6 leading-relaxed" id="dialogMessage">訊息內容</p>
@@ -61,7 +59,6 @@
 
     <div class="max-w-6xl mx-auto space-y-6 mt-2">
         
-        <!-- Header -->
         <header class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-2xl shadow-sm gap-4">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold text-stone-700 tracking-tight">無痛存錢法管家</h1>
@@ -76,12 +73,11 @@
                 </button>
                 <div class="ml-0 md:ml-2 pl-0 md:pl-4 border-l-0 md:border-l border-stone-200 text-right">
                     <div class="text-[10px] text-stone-400 uppercase font-bold tracking-wider">當前月份</div>
-                    <div class="text-xl font-black text-[#D4A373]" id="currentDateDisplay">--</div>
+                    <div class="text-xl font-black text-" id="currentDateDisplay">--</div>
                 </div>
             </div>
         </header>
 
-        <!-- User Instructions -->
         <section class="bg-stone-50 border border-stone-200 rounded-2xl p-5 shadow-sm">
             <button onclick="document.getElementById('instructionsBody').classList.toggle('hidden')" class="w-full flex justify-between items-center text-stone-700 font-bold text-lg focus:outline-none">
                 <span class="flex items-center gap-2">💡 系統使用指南與常見問答</span>
@@ -90,19 +86,19 @@
             <div id="instructionsBody" class="mt-4 text-sm text-stone-600 space-y-4 leading-relaxed border-t border-stone-200 pt-4 hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <h4 class="font-bold text-[#D4A373] mb-1">Q1: 變成 App 放在桌面上？</h4>
+                        <h4 class="font-bold text- mb-1">Q1: 變成 App 放在桌面上？</h4>
                         <p>如果您用 Safari (iPhone) 或 Chrome (Android) 開啟，請點擊瀏覽器底部的「分享」按鈕，選擇<strong>「加入主畫面」</strong>，它就會變成一個獨立的 App 囉！</p>
                     </div>
                     <div>
-                        <h4 class="font-bold text-[#D4A373] mb-1">Q2: 存錢目標的「已累積」會延續嗎？</h4>
+                        <h4 class="font-bold text- mb-1">Q2: 存錢目標的「已累積」會延續嗎？</h4>
                         <p>會的！當您點擊「執行月結算」時，目標中「本月分配」的金額會被正式存入「已累積」中，下個月的分配額會歸零，但您的總存款會持續成長，進度條不會倒退。</p>
                     </div>
                     <div>
-                        <h4 class="font-bold text-[#D4A373] mb-1">Q3: 「未分配結餘水庫」怎麼用？</h4>
+                        <h4 class="font-bold text- mb-1">Q3: 「未分配結餘水庫」怎麼用？</h4>
                         <p>月底結算時，所有沒分配完、沒花完的錢都會流進這裡。如果您想幫某個目標「加碼」，只要手動修改目標的「已累積金額」，系統就會自動從水庫扣款！</p>
                     </div>
                     <div>
-                        <h4 class="font-bold text-[#D4A373] mb-1">Q4: 換手機或清除瀏覽器資料怎麼辦？</h4>
+                        <h4 class="font-bold text- mb-1">Q4: 換手機或清除瀏覽器資料怎麼辦？</h4>
                         <p>本系統資料儲存於您的設備中以保障隱私。請善用右上角的<strong>「⚙️ 備份/設定」</strong>功能，將資料匯出成檔案保存。換設備時只需匯入該檔案，所有紀錄就會回來了！</p>
                     </div>
                 </div>
@@ -111,11 +107,9 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- LEFT COLUMN: INPUTS & SETTINGS -->
             <div class="lg:col-span-5 space-y-6">
                 
-                <!-- Section 1: Income -->
-                <section class="card p-5 border-l-4 border-[#D4A373]">
+                <section class="card p-5 border-l-4 border-">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold flex items-center gap-2 text-stone-700"><span>💰</span> 收入盤點</h2>
                         <button onclick="app.addItem('income')" class="text-xs bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded text-stone-600 transition font-bold">+ 新增項目</button>
@@ -127,8 +121,7 @@
                     </div>
                 </section>
 
-                <!-- Section 2: Fixed Expenses -->
-                <section class="card p-5 border-l-4 border-[#A3B18A]">
+                <section class="card p-5 border-l-4 border-">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold flex items-center gap-2 text-stone-700"><span>🏠</span> 固定支出</h2>
                         <button onclick="app.addItem('fixed')" class="text-xs bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded text-stone-600 transition font-bold">+ 新增項目</button>
@@ -140,7 +133,6 @@
                     </div>
                 </section>
 
-                <!-- Section 3: Debt Management -->
                 <section class="card p-5 border-l-4 border-[#E63946]">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-lg font-bold flex items-center gap-2 text-stone-700"><span>💳</span> 負債管理</h2>
@@ -167,10 +159,8 @@
 
             </div>
 
-            <!-- RIGHT COLUMN: ALLOCATION & INTERACTIVE BOOKS -->
             <div class="lg:col-span-7 space-y-6">
 
-                <!-- Allocation Dashboard -->
                 <section class="card p-5">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-3">
                         <h2 class="text-lg font-bold flex items-center gap-2 text-stone-700">📊 資金分配儀表板</h2>
@@ -187,35 +177,34 @@
                              <canvas id="allocationChart"></canvas>
                         </div>
                         <div class="space-y-3">
-                            <!-- Editable Allocation Details -->
-                            <div class="p-3 bg-white rounded-xl border border-stone-200 relative overflow-hidden transition-all focus-within:ring-2 focus-within:ring-[#D4A373]/50 hover:shadow-md hover:border-[#D4A373] group shadow-sm">
-                                <div class="absolute top-0 left-0 w-1.5 h-full bg-[#D4A373]"></div>
+                            <div class="p-3 bg-white rounded-xl border border-stone-200 relative overflow-hidden transition-all focus-within:ring-2 focus-within:ring-/50 hover:shadow-md hover:border- group shadow-sm">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-"></div>
                                 <div class="flex justify-between items-center mb-1 pl-3">
-                                    <span class="font-bold text-stone-700 cursor-pointer hover:text-[#D4A373] transition-colors" onclick="app.switchTab('budget')">📖 預算本</span>
+                                    <span class="font-bold text-stone-700 cursor-pointer hover:text- transition-colors" onclick="app.switchTab('budget')">📖 預算本</span>
                                     <div class="flex items-center gap-1 text-[11px] font-bold text-stone-500">
-                                        <input type="number" id="master-ratio-budget" onchange="app.updateMasterAllocation('budget', 'ratio', this.value)" step="0.1" class="w-12 text-right bg-stone-50 border border-stone-200 rounded px-1 py-0.5 focus:outline-none focus:border-[#D4A373] transition-colors">%
+                                        <input type="number" id="master-ratio-budget" onchange="app.updateMasterAllocation('budget', 'ratio', this.value)" step="0.1" class="w-12 text-right bg-stone-50 border border-stone-200 rounded px-1 py-0.5 focus:outline-none focus:border- transition-colors">%
                                     </div>
                                 </div>
                                 <div class="flex justify-between items-center pl-3">
                                     <div class="text-[10px] text-stone-400 font-bold">供本月日常花費使用</div>
-                                    <div class="flex items-center text-[#D4A373] font-black text-lg">
-                                        $ <input type="number" id="master-amount-budget" onchange="app.updateMasterAllocation('budget', 'amount', this.value)" class="w-20 text-right bg-transparent border-b border-transparent rounded-none px-1 py-0 ml-1 focus:outline-none focus:border-[#D4A373] transition-colors">
+                                    <div class="flex items-center text- font-black text-lg">
+                                        $ <input type="number" id="master-amount-budget" onchange="app.updateMasterAllocation('budget', 'amount', this.value)" class="w-20 text-right bg-transparent border-b border-transparent rounded-none px-1 py-0 ml-1 focus:outline-none focus:border- transition-colors">
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="p-3 bg-white rounded-xl border border-stone-200 relative overflow-hidden transition-all focus-within:ring-2 focus-within:ring-[#A3B18A]/50 hover:shadow-md hover:border-[#A3B18A] group shadow-sm">
-                                <div class="absolute top-0 left-0 w-1.5 h-full bg-[#A3B18A]"></div>
+                            <div class="p-3 bg-white rounded-xl border border-stone-200 relative overflow-hidden transition-all focus-within:ring-2 focus-within:ring-/50 hover:shadow-md hover:border- group shadow-sm">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-"></div>
                                 <div class="flex justify-between items-center mb-1 pl-3">
-                                    <span class="font-bold text-stone-700 cursor-pointer hover:text-[#A3B18A] transition-colors" onclick="app.switchTab('presave')">✈️ 預存本</span>
+                                    <span class="font-bold text-stone-700 cursor-pointer hover:text- transition-colors" onclick="app.switchTab('presave')">✈️ 預存本</span>
                                     <div class="flex items-center gap-1 text-[11px] font-bold text-stone-500">
-                                        <input type="number" id="master-ratio-presave" onchange="app.updateMasterAllocation('presave', 'ratio', this.value)" step="0.1" class="w-12 text-right bg-stone-50 border border-stone-200 rounded px-1 py-0.5 focus:outline-none focus:border-[#A3B18A] transition-colors">%
+                                        <input type="number" id="master-ratio-presave" onchange="app.updateMasterAllocation('presave', 'ratio', this.value)" step="0.1" class="w-12 text-right bg-stone-50 border border-stone-200 rounded px-1 py-0.5 focus:outline-none focus:border- transition-colors">%
                                     </div>
                                 </div>
                                 <div class="flex justify-between items-center pl-3">
                                     <div class="text-[10px] text-stone-400 font-bold">下方自由分配給願望</div>
-                                    <div class="flex items-center text-[#A3B18A] font-black text-lg">
-                                        $ <input type="number" id="master-amount-presave" onchange="app.updateMasterAllocation('presave', 'amount', this.value)" class="w-20 text-right bg-transparent border-b border-transparent rounded-none px-1 py-0 ml-1 focus:outline-none focus:border-[#A3B18A] transition-colors">
+                                    <div class="flex items-center text- font-black text-lg">
+                                        $ <input type="number" id="master-amount-presave" onchange="app.updateMasterAllocation('presave', 'amount', this.value)" class="w-20 text-right bg-transparent border-b border-transparent rounded-none px-1 py-0 ml-1 focus:outline-none focus:border- transition-colors">
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +228,6 @@
                     </div>
                 </section>
 
-                <!-- Shared Unallocated Savings Header -->
                 <div class="flex flex-col md:flex-row justify-between items-center bg-stone-800 text-white p-5 rounded-2xl shadow-lg gap-4">
                     <div class="flex items-center gap-3 w-full md:w-auto">
                         <div class="text-3xl bg-stone-700 p-2 rounded-full shadow-inner">💰</div>
@@ -248,16 +236,14 @@
                             <p class="text-[10px] text-stone-400 mt-1 font-bold">手動調高目標「已累積」時，將自動從水庫扣款</p>
                         </div>
                     </div>
-                    <div class="text-3xl font-black text-[#D4A373] tracking-wider bg-stone-900 px-6 py-2.5 rounded-xl border border-stone-700 unallocatedDisplayGlobal shadow-inner w-full md:w-auto text-center md:text-right">
+                    <div class="text-3xl font-black text- tracking-wider bg-stone-900 px-6 py-2.5 rounded-xl border border-stone-700 unallocatedDisplayGlobal shadow-inner w-full md:w-auto text-center md:text-right">
                         $0
                     </div>
                 </div>
 
-                <!-- Detailed Books Management (TABS) -->
                 <section class="card p-0 overflow-hidden flex flex-col shadow-lg" id="bookTabsSection">
-                    <!-- Tabs Header -->
                     <div class="flex border-b border-stone-200 bg-stone-50 px-2 md:px-6 pt-3 gap-2 md:gap-6 relative overflow-x-auto scroller">
-                        <button onclick="app.switchTab('budget')" id="tab-btn-budget" class="pb-3 px-3 text-base md:text-lg font-bold text-[#D4A373] border-b-[3px] border-[#D4A373] transition-colors focus:outline-none whitespace-nowrap">
+                        <button onclick="app.switchTab('budget')" id="tab-btn-budget" class="pb-3 px-3 text-base md:text-lg font-bold text- border-b-[3px] border- transition-colors focus:outline-none whitespace-nowrap">
                             📖 預算本
                         </button>
                         <button onclick="app.switchTab('presave')" id="tab-btn-presave" class="pb-3 px-3 text-base md:text-lg font-bold text-stone-400 border-b-[3px] border-transparent hover:text-stone-600 transition-colors focus:outline-none whitespace-nowrap">
@@ -269,7 +255,6 @@
                     </div>
 
                     <div class="p-4 md:p-6 bg-white">
-                        <!-- TAB 1: BUDGET BOOK -->
                         <div id="tab-content-budget" class="tab-content active">
                             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 pb-3 gap-3 border-b border-stone-100">
                                 <p class="text-xs font-bold text-stone-400">日常開銷記帳，控管生活費進度</p>
@@ -277,7 +262,7 @@
                                     <div id="budgetUnallocatedBadge" class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-stone-100 text-stone-600 shadow-inner border border-stone-200">
                                         待分配: $0
                                     </div>
-                                    <button onclick="app.autoDistribute('budget')" class="text-[11px] text-[#D4A373] bg-[#D4A373] bg-opacity-10 hover:bg-opacity-20 border border-[#D4A373] border-opacity-30 rounded px-3 py-1.5 transition shadow-sm font-bold flex-1 lg:flex-none text-center">自動依比例分配</button>
+                                    <button onclick="app.autoDistribute('budget')" class="text-[11px] text- bg- bg-opacity-10 hover:bg-opacity-20 border border- border-opacity-30 rounded px-3 py-1.5 transition shadow-sm font-bold flex-1 lg:flex-none text-center">自動依比例分配</button>
                                     <button onclick="app.addItem('budget')" class="text-[11px] bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded text-stone-600 transition border border-stone-200 font-bold flex-1 lg:flex-none text-center">+ 新增類別</button>
                                 </div>
                             </div>
@@ -285,13 +270,11 @@
                             <div id="budgetList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
 
                             <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Transaction History -->
                                 <div class="p-4 bg-stone-50 rounded-xl border border-stone-200 shadow-sm flex flex-col max-h-[300px]">
                                     <h3 class="font-bold text-stone-700 text-sm mb-3 flex items-center gap-1 border-b border-stone-200 pb-2"><span>📝</span> 本月支出紀錄</h3>
                                     <div id="txList" class="space-y-2 overflow-y-auto scroller text-sm pr-1 flex-1"></div>
                                 </div>
 
-                                <!-- Credit Card Logic -->
                                 <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200 flex flex-col justify-between shadow-sm relative overflow-hidden">
                                     <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-100 rounded-bl-full -mr-10 -mt-10 opacity-60"></div>
                                     <div class="relative z-10">
@@ -309,25 +292,23 @@
                             </div>
                         </div>
 
-                        <!-- TAB 2: PRESAVE BOOK -->
                         <div id="tab-content-presave" class="tab-content">
-                            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 bg-[#A3B18A]/10 p-4 rounded-xl border border-[#A3B18A]/30 gap-3">
+                            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 bg-/10 p-4 rounded-xl border border-/30 gap-3">
                                 <div>
-                                    <h3 class="font-bold text-[#6B7A56] text-lg">✈️ 願望清單與預存目標</h3>
-                                    <p class="text-[11px] font-bold text-stone-500 mt-1">儀表板分配總額：<strong id="headerPresaveAlloc" class="text-[#A3B18A] text-sm font-black bg-white px-2 py-0.5 rounded shadow-sm ml-1">--</strong></p>
+                                    <h3 class="font-bold text- text-lg">✈️ 願望清單與預存目標</h3>
+                                    <p class="text-[11px] font-bold text-stone-500 mt-1">儀表板分配總額：<strong id="headerPresaveAlloc" class="text- text-sm font-black bg-white px-2 py-0.5 rounded shadow-sm ml-1">--</strong></p>
                                 </div>
                                 <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-                                    <div id="presaveUnallocatedBadge" class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-white text-stone-600 shadow-sm border border-[#A3B18A]/30">
+                                    <div id="presaveUnallocatedBadge" class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-white text-stone-600 shadow-sm border border-/30">
                                         待分配: $0
                                     </div>
-                                    <button onclick="app.autoDistribute('presave')" class="text-[11px] text-[#6B7A56] bg-white hover:bg-stone-50 border border-[#A3B18A]/50 rounded px-3 py-1.5 transition shadow-sm font-bold flex-1 lg:flex-none text-center">自動依比例分配</button>
-                                    <button onclick="app.addItem('presave')" class="text-[11px] bg-white hover:bg-stone-50 text-[#6B7A56] font-bold py-1.5 px-3 rounded shadow-sm border border-[#A3B18A]/30 transition flex-1 lg:flex-none text-center">+ 新增願望</button>
+                                    <button onclick="app.autoDistribute('presave')" class="text-[11px] text- bg-white hover:bg-stone-50 border border-/50 rounded px-3 py-1.5 transition shadow-sm font-bold flex-1 lg:flex-none text-center">自動依比例分配</button>
+                                    <button onclick="app.addItem('presave')" class="text-[11px] bg-white hover:bg-stone-50 text- font-bold py-1.5 px-3 rounded shadow-sm border border-/30 transition flex-1 lg:flex-none text-center">+ 新增願望</button>
                                 </div>
                             </div>
                             <div id="presaveList" class="grid grid-cols-1 gap-4"></div>
                         </div>
 
-                        <!-- TAB 3: SAVINGS BOOK -->
                         <div id="tab-content-savings" class="tab-content">
                             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 bg-[#E63946]/10 p-4 rounded-xl border border-[#E63946]/30 gap-3">
                                 <div>
@@ -347,12 +328,11 @@
                     </div>
                 </section>
 
-                <!-- Monthly Reset -->
                 <section class="card p-6 bg-stone-800 text-stone-200 shadow-xl border border-stone-700 relative overflow-hidden">
                     <div class="absolute -right-10 -top-10 text-[100px] opacity-10">🗓️</div>
                     <div class="relative z-10">
                         <h2 class="text-xl font-bold mb-2 text-white">🗓️ 月末結算與封存</h2>
-                        <p class="text-xs text-stone-400 mb-5 leading-relaxed">點擊後，各帳本內「本月分配」的金額會轉為正式的「已累積」，未花完/未分配的結餘將全數匯入<strong class="text-[#D4A373]">結餘水庫</strong>。記帳明細將永久封存至歷史紀錄。</p>
+                        <p class="text-xs text-stone-400 mb-5 leading-relaxed">點擊後，各帳本內「本月分配」的金額會轉為正式的「已累積」，未花完/未分配的結餘將全數匯入<strong class="text-">結餘水庫</strong>。記帳明細將永久封存至歷史紀錄。</p>
                         
                         <div class="flex flex-col md:flex-row items-center justify-between bg-stone-900 p-5 rounded-xl mb-5 border border-stone-600 shadow-inner gap-4">
                             <div class="w-full md:w-auto text-center md:text-left">
@@ -362,11 +342,11 @@
                             <div class="text-2xl text-stone-600 hidden md:block">➔</div>
                             <div class="w-full md:w-auto text-center md:text-right bg-stone-800 md:bg-transparent p-3 md:p-0 rounded-lg">
                                 <div class="text-[10px] font-bold text-stone-400 mb-1 uppercase tracking-wider">水庫結算後總金額</div>
-                                <div class="text-2xl font-black text-[#D4A373]" id="expectedReservoir">$0</div>
+                                <div class="text-2xl font-black text-" id="expectedReservoir">$0</div>
                             </div>
                         </div>
 
-                        <button onclick="app.resetMonth()" class="w-full py-4 bg-gradient-to-r from-[#D4A373] to-[#C39262] hover:from-[#C39262] hover:to-[#B38252] text-white font-black rounded-xl transition shadow-lg text-lg flex items-center justify-center gap-2 transform active:scale-[0.98]">
+                        <button onclick="app.resetMonth()" class="w-full py-4 bg-gradient-to-r from- to-[#C39262] hover:from-[#C39262] hover:to- text-white font-black rounded-xl transition shadow-lg text-lg flex items-center justify-center gap-2 transform active:scale-[0.98]">
                             <span class="text-2xl">✅</span> 執行月結算 (存入進度並清空帳本)
                         </button>
                     </div>
@@ -376,11 +356,14 @@
         </div>
     </div>
 
-    <!-- Edit Transaction Modal -->
-    <div id="editModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-60 flex items-center justify-center z-[150] p-4 transition-opacity">
+    <div id="editModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-60 flex items-center justify-center z- p-4 transition-opacity">
         <div class="bg-white p-6 rounded-2xl w-full max-w-sm shadow-2xl">
             <h3 class="font-bold text-xl mb-4 text-stone-800 border-b border-stone-100 pb-2">✏️ 編輯支出紀錄</h3>
             <input type="hidden" id="editTxId">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-stone-600 mb-1">消費名稱</label>
+                <input type="text" id="editTxItemName" class="input-std text-lg font-bold text-stone-700">
+            </div>
             <div class="mb-4">
                 <label class="block text-sm font-medium text-stone-600 mb-1">支出金額</label>
                 <input type="number" id="editTxAmount" class="input-std text-lg font-bold text-stone-700">
@@ -394,13 +377,12 @@
             </div>
             <div class="flex justify-end gap-3 pt-2 border-t border-stone-100">
                 <button onclick="app.closeEditModal()" class="px-5 py-2 bg-stone-100 hover:bg-stone-200 rounded-lg text-sm text-stone-600 font-medium transition">取消</button>
-                <button onclick="app.saveEditTx()" class="px-5 py-2 bg-[#D4A373] hover:bg-[#C39262] text-white rounded-lg text-sm font-bold transition shadow-sm">儲存修改</button>
+                <button onclick="app.saveEditTx()" class="px-5 py-2 bg- hover:bg-[#C39262] text-white rounded-lg text-sm font-bold transition shadow-sm">儲存修改</button>
             </div>
         </div>
     </div>
 
-    <!-- History Modal -->
-    <div id="historyModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-70 flex items-center justify-center z-[150] p-4 transition-opacity duration-300">
+    <div id="historyModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-70 flex items-center justify-center z- p-4 transition-opacity duration-300">
         <div class="bg-white rounded-2xl w-full max-w-2xl h-[85vh] flex flex-col shadow-2xl overflow-hidden transform transition-transform">
             <div class="p-6 border-b border-stone-200 flex justify-between items-center bg-stone-50">
                 <div>
@@ -410,27 +392,23 @@
                 <button onclick="app.closeHistoryModal()" class="text-stone-400 hover:text-stone-700 text-3xl font-bold leading-none w-10 h-10 rounded-full hover:bg-stone-200 transition flex items-center justify-center">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto flex-1 scroller bg-stone-100/50" id="historyListContainer">
-                <!-- History Items Injected Here -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- Settings / Backup Modal -->
-    <div id="settingsModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-70 flex items-center justify-center z-[150] p-4 transition-opacity duration-300">
+    <div id="settingsModal" class="hidden fixed inset-0 bg-stone-900 bg-opacity-70 flex items-center justify-center z- p-4 transition-opacity duration-300">
         <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden transform transition-transform scale-95" id="settingsModalContent">
             <div class="p-6 border-b border-stone-200 flex justify-between items-center bg-stone-50">
                 <h3 class="font-bold text-xl text-stone-800 flex items-center gap-2">⚙️ 系統備份與設定</h3>
                 <button onclick="app.closeSettingsModal()" class="text-stone-400 hover:text-stone-700 text-2xl font-bold leading-none transition">&times;</button>
             </div>
             <div class="p-6 space-y-5 max-h-[70vh] overflow-y-auto scroller">
-                <!-- Export -->
                 <div class="bg-stone-50 p-5 rounded-xl border border-stone-200 shadow-sm">
                     <h4 class="font-bold text-stone-800 text-sm mb-2 flex items-center gap-2">📥 匯出資料 (安全備份)</h4>
                     <p class="text-[11px] text-stone-500 mb-4 leading-relaxed font-bold">將目前的收支設定、帳本目標與所有歷史紀錄下載為實體檔案，建議您定期備份至電腦或手機中保存。</p>
                     <button onclick="app.exportData()" class="w-full py-2.5 bg-stone-800 hover:bg-stone-900 text-white rounded-lg text-sm font-bold transition shadow-sm">下載備份檔 (.json)</button>
                 </div>
 
-                <!-- Import -->
                 <div class="bg-stone-50 p-5 rounded-xl border border-stone-200 shadow-sm">
                     <h4 class="font-bold text-stone-800 text-sm mb-2 flex items-center gap-2">📤 匯入資料 (資料還原)</h4>
                     <p class="text-[11px] text-red-500 mb-4 leading-relaxed font-bold">⚠️ 注意：匯入資料將會完全覆蓋您目前瀏覽器中的所有設定與紀錄！</p>
@@ -438,7 +416,6 @@
                     <button onclick="document.getElementById('importFileInput').click()" class="w-full py-2.5 bg-white border border-stone-300 hover:bg-stone-100 text-stone-700 rounded-lg text-sm font-bold transition shadow-sm">選擇備份檔並還原</button>
                 </div>
 
-                <!-- Clear History (Danger Zone) -->
                 <div class="bg-red-50 p-5 rounded-xl border border-red-200 shadow-sm relative overflow-hidden">
                     <div class="absolute right-0 bottom-0 text-6xl opacity-10 mb-[-10px] mr-[-10px]">🗑️</div>
                     <h4 class="font-bold text-red-800 text-sm mb-2 flex items-center gap-2 relative z-10">🗑️ 清空歷史紀錄</h4>
@@ -449,7 +426,6 @@
         </div>
     </div>
 
-    <!-- MAIN APP LOGIC -->
     <script>
         const defaultBudget = [
             { id: 'cat-1', name: '每週餐費', budget: 0, ratio: 40 },
@@ -466,9 +442,9 @@
                     { id: 'inc-2', name: '額外獎金/副業', amount: 0 }
                 ],
                 fixedExpenses: [{ id: 1, name: '房租', amount: 0 }, { id: 2, name: '水電費', amount: 0 }],
-                debts: [], 
+                debts:, 
                 hasDebt: false,
-                transactions: [],
+                transactions:,
                 
                 masterRatios: { budget: 50, presave: 20, savings: 30 },
                 isManualMasterRatio: false,
@@ -485,7 +461,7 @@
                 unallocatedSavings: 0,
                 ccPaidAmount: 0 
             },
-            historyRecords: [],
+            historyRecords:,
             charts: {},
             saveTimeout: null,
             activeTab: 'budget', 
@@ -497,41 +473,38 @@
                 if(dateDisplay) dateDisplay.textContent = `${now.getFullYear()}年 ${now.getMonth() + 1}月`;
                 
                 // 本地載入邏輯：如果是在沒有 Firebase 的環境下執行，嘗試讀取 LocalStorage
-                if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+                if (typeof __firebase_config === 'undefined' ||!__firebase_config) {
                     try {
                         const localState = localStorage.getItem('smart-budget-app-state');
                         if (localState) {
                             const cData = JSON.parse(localState);
                             
                             // State Migrations
-                            if(cData.salary !== undefined || cData.bonus !== undefined) {
+                            if(cData.salary!== undefined || cData.bonus!== undefined) {
                                 if(!cData.incomes || cData.incomes.length === 0) {
-                                    cData.incomes = [
-                                        { id: 'inc-1', name: '月薪資 (實領)', amount: cData.salary || 0 },
-                                        { id: 'inc-2', name: '額外獎金/收入', amount: cData.bonus || 0 }
-                                    ];
+                                    cData.incomes =;
                                 }
                                 delete cData.salary;
                                 delete cData.bonus;
                             }
                             if(!cData.incomes) cData.incomes = [{ id: 'inc-1', name: '月薪資 (實領)', amount: 0 }];
-                            if(cData.totalSavings && !cData.unallocatedSavings) cData.unallocatedSavings = cData.totalSavings;
-                            if(!cData.presaveGoals) cData.presaveGoals = [];
-                            if(!cData.savingsGoals) cData.savingsGoals = [];
+                            if(cData.totalSavings &&!cData.unallocatedSavings) cData.unallocatedSavings = cData.totalSavings;
+                            if(!cData.presaveGoals) cData.presaveGoals =;
+                            if(!cData.savingsGoals) cData.savingsGoals =;
                             if(cData.ccPaidAmount === undefined) cData.ccPaidAmount = 0;
                             if(!cData.masterRatios) cData.masterRatios = { budget: 50, presave: 20, savings: 30 };
                             
                             cData.presaveGoals.forEach(g => { 
-                                if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
+                                if(g.current!== undefined) { g.accumulated = g.current; delete g.current; }
                             });
                             cData.savingsGoals.forEach(g => { 
-                                if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
+                                if(g.current!== undefined) { g.accumulated = g.current; delete g.current; }
                             });
 
-                            this.data = { ...this.data, ...cData };
+                            this.data = {...this.data,...cData };
                             
                             this.data.budgetItems.forEach(item => {
-                                if(item.ratio === undefined) { const dc = defaultBudget.find(c => c.name === item.name); item.ratio = dc ? dc.ratio : 10; }
+                                if(item.ratio === undefined) { const dc = defaultBudget.find(c => c.name === item.name); item.ratio = dc? dc.ratio : 10; }
                                 if(item.budget === undefined) item.budget = 0;
                             });
                             this.data.presaveGoals.forEach(item => {
@@ -548,8 +521,8 @@
                         if (localHistory) {
                             try {
                                 const parsedHist = JSON.parse(localHistory);
-                                this.historyRecords = Array.isArray(parsedHist) ? parsedHist : [];
-                            } catch(e) { this.historyRecords = []; }
+                                this.historyRecords = Array.isArray(parsedHist)? parsedHist :;
+                            } catch(e) { this.historyRecords =; }
                         }
                     } catch(e) { console.error("Local storage load error", e); }
                     
@@ -576,7 +549,7 @@
                 const modal = document.getElementById('dialogModal');
                 const modalContent = document.getElementById('dialogModalContent');
 
-                if(!titleEl || !msgEl || !btnContainer || !modal || !modalContent) return;
+                if(!titleEl ||!msgEl ||!btnContainer ||!modal ||!modalContent) return;
 
                 titleEl.innerHTML = title;
                 msgEl.innerHTML = message.replace(/\n/g, '<br>');
@@ -589,7 +562,7 @@
                     cancelBtn.onclick = () => this.closeDialog();
                     
                     const confirmBtn = document.createElement('button');
-                    confirmBtn.className = 'px-5 py-2.5 bg-[#D4A373] hover:bg-[#C39262] text-white rounded-xl text-sm font-bold transition shadow-sm';
+                    confirmBtn.className = 'px-5 py-2.5 bg- hover:bg-[#C39262] text-white rounded-xl text-sm font-bold transition shadow-sm';
                     confirmBtn.textContent = '確定執行';
                     confirmBtn.onclick = () => {
                         this.closeDialog();
@@ -599,7 +572,7 @@
                     btnContainer.appendChild(confirmBtn);
                 } else {
                     const okBtn = document.createElement('button');
-                    okBtn.className = 'px-6 py-2.5 bg-[#D4A373] hover:bg-[#C39262] text-white rounded-xl text-sm font-bold transition shadow-sm w-full';
+                    okBtn.className = 'px-6 py-2.5 bg- hover:bg-[#C39262] text-white rounded-xl text-sm font-bold transition shadow-sm w-full';
                     okBtn.textContent = '我知道了';
                     okBtn.onclick = () => {
                         this.closeDialog();
@@ -625,7 +598,7 @@
             openSettingsModal() {
                 const modal = document.getElementById('settingsModal');
                 const modalContent = document.getElementById('settingsModalContent');
-                if(!modal || !modalContent) return;
+                if(!modal ||!modalContent) return;
                 modal.classList.remove('hidden');
                 setTimeout(() => { modalContent.classList.remove('scale-95'); modalContent.classList.add('scale-100'); }, 10);
             },
@@ -662,7 +635,7 @@
                 this.showDialog('✅ 匯出成功', '資料已成功下載到您的裝置中！請妥善保存此檔案。', 'alert');
             },
             importData(event) {
-                const file = event.target.files[0];
+                const file = event.target.files;
                 if (!file) return;
                 
                 const reader = new FileReader();
@@ -671,7 +644,7 @@
                         const backup = JSON.parse(e.target.result);
                         if(backup && backup.state) {
                             this.data = backup.state;
-                            this.historyRecords = Array.isArray(backup.history) ? backup.history : [];
+                            this.historyRecords = Array.isArray(backup.history)? backup.history :;
                             
                             localStorage.setItem('smart-budget-app-state', JSON.stringify(this.data));
                             localStorage.setItem('smart-budget-app-history', JSON.stringify(this.historyRecords));
@@ -686,7 +659,7 @@
                             throw new Error("Invalid format");
                         }
                     } catch(err) {
-                        this.showDialog('❌ 還原失敗', '您選擇的檔案格式錯誤或已損毀。請確認這是本系統匯出的 .json 備份檔。', 'alert');
+                        this.showDialog('❌ 還原失敗', '您選擇的檔案格式錯誤或已損毀。請確認這是本系統匯出的.json 備份檔。', 'alert');
                     }
                     event.target.value = '';
                 };
@@ -696,7 +669,7 @@
                 this.closeSettingsModal();
                 setTimeout(() => {
                     this.showDialog('⚠️ 警告：清空歷史紀錄', '您確定要刪除「所有」的歷史結算紀錄嗎？\n此操作無法復原，如果您尚未匯出備份，請三思！\n\n(註：此操作不會影響您當前的預算與目標設定)', 'confirm', () => {
-                        this.historyRecords = [];
+                        this.historyRecords =;
                         localStorage.removeItem('smart-budget-app-history');
                         
                         if (window.clearCloudHistory) {
@@ -719,7 +692,7 @@
                 tabs.forEach(t => {
                     const btn = document.getElementById(`tab-btn-${t}`);
                     const content = document.getElementById(`tab-content-${t}`);
-                    if(!btn || !content) return;
+                    if(!btn ||!content) return;
 
                     if (t === tabName) {
                         btn.className = `pb-3 px-3 text-base md:text-lg font-bold text-[${colors[t]}] border-b-[3px] border-[${colors[t]}] transition-colors focus:outline-none whitespace-nowrap`;
@@ -759,8 +732,8 @@
                     data: {
                         labels: ['預算本 (生活)', '預存本 (未來)', '存錢本 (投資/還款)'],
                         datasets: [{
-                            data: [50, 20, 30],
-                            backgroundColor: ['#D4A373', '#A3B18A', '#E63946'],
+                            data: ,
+                            backgroundColor:,
                             borderWidth: 0,
                             hoverOffset: 8
                         }]
@@ -775,7 +748,7 @@
                                     label: function(context) {
                                         let label = context.label || '';
                                         if (label) label += ': ';
-                                        if (context.parsed !== null) label += new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(context.parsed);
+                                        if (context.parsed!== null) label += new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(context.parsed);
                                         return label;
                                     }
                                 }
@@ -783,7 +756,7 @@
                         },
                         onClick: (e, elements) => {
                             if (elements.length > 0) {
-                                const idx = elements[0].index;
+                                const idx = elements.index;
                                 const tabs = ['budget', 'presave', 'savings'];
                                 if(idx < 3) this.switchTab(tabs[idx]);
                             }
@@ -811,7 +784,7 @@
             getDiscretionary() {
                 const totalIncome = this.data.incomes.reduce((sum, item) => sum + (item.amount || 0), 0);
                 const totalFixed = this.data.fixedExpenses.reduce((sum, item) => sum + (item.amount || 0), 0);
-                let totalDebtMonthly = this.data.hasDebt ? this.data.debts.reduce((sum, item) => sum + (item.monthly || 0), 0) : 0;
+                let totalDebtMonthly = this.data.hasDebt? this.data.debts.reduce((sum, item) => sum + (item.monthly || 0), 0) : 0;
                 return Math.max(0, totalIncome - totalFixed - totalDebtMonthly);
             },
 
@@ -928,7 +901,7 @@
                 // Chart Update
                 if(this.charts.allocation) {
                     let cLabels = ['預算本 (生活)', '預存本 (未來)', '存錢本 (投資/還款)'];
-                    let cColors = ['#D4A373', '#A3B18A', '#E63946'];
+                    let cColors =;
                     let cData = [budgetPool, presaveAmt, savingsAmt];
                     if(mainUnallocated > 0) {
                         cLabels.push('待分配額度');
@@ -936,19 +909,19 @@
                         cData.push(mainUnallocated);
                     }
                     this.charts.allocation.data.labels = cLabels;
-                    this.charts.allocation.data.datasets[0].backgroundColor = cColors;
-                    this.charts.allocation.data.datasets[0].data = cData;
+                    this.charts.allocation.data.datasets.backgroundColor = cColors;
+                    this.charts.allocation.data.datasets.data = cData;
                     this.charts.allocation.update();
                 }
 
                 // Auto-Distribute internal pools if uninitialized
-                if (this._getSum(this.data.budgetItems, 'budget') === 0 && budgetPool > 0 && !this.data.isManualBudget) 
+                if (this._getSum(this.data.budgetItems, 'budget') === 0 && budgetPool > 0 &&!this.data.isManualBudget) 
                     this._performRatioDistribution(this.data.budgetItems, budgetPool);
                 
-                if (this._getSum(this.data.presaveGoals, 'budget') === 0 && presaveAmt > 0 && !this.data.isManualPresave) 
+                if (this._getSum(this.data.presaveGoals, 'budget') === 0 && presaveAmt > 0 &&!this.data.isManualPresave) 
                     this._performRatioDistribution(this.data.presaveGoals, presaveAmt);
                 
-                if (this._getSum(this.data.savingsGoals, 'budget') === 0 && savingsAmt > 0 && !this.data.isManualSavings) 
+                if (this._getSum(this.data.savingsGoals, 'budget') === 0 && savingsAmt > 0 &&!this.data.isManualSavings) 
                     this._performRatioDistribution(this.data.savingsGoals, savingsAmt);
 
                 // Render all tabs
@@ -1006,7 +979,7 @@
             },
 
             handleGoalFund(type, index, newValueStr, oldValue) {
-                const goals = type === 'presave' ? this.data.presaveGoals : this.data.savingsGoals;
+                const goals = type === 'presave'? this.data.presaveGoals : this.data.savingsGoals;
                 let newValue = Number(newValueStr);
                 if(isNaN(newValue)) newValue = oldValue;
                 
@@ -1050,35 +1023,35 @@
 
                 this.data.budgetItems.forEach((item, index) => {
                     let allocated = item.budget || 0;
-                    let ratio = item.ratio !== undefined ? item.ratio : 10;
+                    let ratio = item.ratio!== undefined? item.ratio : 10;
                     let spentForCat = this.data.transactions.filter(tx => tx.catId === item.id).reduce((sum, tx) => sum + tx.amount, 0);
 
                     const remainingItemBalance = allocated - spentForCat;
-                    const balanceColor = remainingItemBalance < 0 ? 'text-red-500' : 'text-stone-600';
+                    const balanceColor = remainingItemBalance < 0? 'text-red-500' : 'text-stone-600';
 
                     const div = document.createElement('div');
-                    div.className = 'p-4 bg-white border border-stone-200 rounded-xl shadow-sm transition-all hover:border-[#D4A373] hover:shadow-md flex flex-col justify-between group';
+                    div.className = 'p-4 bg-white border border-stone-200 rounded-xl shadow-sm transition-all hover:border- hover:shadow-md flex flex-col justify-between group';
                     div.innerHTML = `
                         <div class="flex justify-between items-start mb-2">
                             <div class="w-3/4">
                                 <input type="text" value="${item.name}" 
                                     onchange="app.updateBudgetItemName(${index}, this.value)" 
-                                    class="font-bold text-stone-700 text-sm bg-transparent border-b border-transparent hover:border-stone-300 focus:border-[#D4A373] focus:outline-none w-full truncate pb-1 transition-colors" 
+                                    class="font-bold text-stone-700 text-sm bg-transparent border-b border-transparent hover:border-stone-300 focus:border- focus:outline-none w-full truncate pb-1 transition-colors" 
                                     placeholder="類別名稱">
                                 <div class="flex items-center text-[10px] text-stone-400 mt-1 gap-1">
                                     <span>自動分配權重:</span>
-                                    <input type="number" value="${ratio}" onchange="app.updateItemField('budget', ${index}, 'ratio', this.value)" class="w-10 border-b border-stone-200 text-center focus:outline-none focus:border-[#D4A373]">
+                                    <input type="number" value="${ratio}" onchange="app.updateItemField('budget', ${index}, 'ratio', this.value)" class="w-10 border-b border-stone-200 text-center focus:outline-none focus:border-">
                                 </div>
                             </div>
                             <button onclick="app.removeBudgetItem(${index})" class="text-xl text-stone-300 hover:text-red-500 leading-none opacity-0 group-hover:opacity-100 transition-opacity" title="刪除類別">&times;</button>
                         </div>
                         
                         <div class="flex justify-between items-center text-xs mb-3 mt-2">
-                            <div class="flex items-center gap-1 bg-stone-50 px-2 py-1.5 rounded border border-stone-100 focus-within:border-[#D4A373] transition-colors w-1/2">
+                            <div class="flex items-center gap-1 bg-stone-50 px-2 py-1.5 rounded border border-stone-100 focus-within:border- transition-colors w-1/2">
                                 <span class="text-stone-400 font-bold whitespace-nowrap">預算 $</span>
                                 <input type="number" value="${allocated}" 
                                     onchange="app.updateItemField('budget', ${index}, 'budget', this.value)" 
-                                    class="w-full border-none text-stone-700 font-bold focus:outline-none bg-transparent" 
+                                    class="w-full border-none text-stone-700 font-bold focus:outline-none bg-transparent text-right" 
                                     placeholder="0">
                             </div>
                             <span class="${balanceColor} font-bold text-[13px] bg-stone-50 px-2 py-1.5 rounded border border-stone-100 whitespace-nowrap">餘額 ${this.formatMoney(remainingItemBalance)}</span>
@@ -1086,17 +1059,18 @@
                         
                         <div class="relative pt-1 mb-4">
                             <div class="overflow-hidden h-2 flex rounded-full bg-stone-100 shadow-inner">
-                                <div style="width:${Math.min(100, (spentForCat / (allocated || 1)) * 100)}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${remainingItemBalance < 0 ? 'bg-red-400' : 'bg-[#D4A373]'} transition-all duration-500"></div>
+                                <div style="width:${Math.min(100, (spentForCat / (allocated || 1)) * 100)}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${remainingItemBalance < 0? 'bg-red-400' : 'bg-'} transition-all duration-500"></div>
                             </div>
                         </div>
                         
                         <div class="flex gap-1.5 mt-auto">
-                            <input type="number" id="spend-amt-${index}" placeholder="金額" class="w-[45%] text-xs border border-stone-200 rounded p-2 outline-none focus:border-[#D4A373] focus:ring-1 focus:ring-[#D4A373] transition">
-                            <select id="spend-method-${index}" class="w-[30%] text-[11px] font-bold text-stone-600 border border-stone-200 rounded p-1.5 outline-none bg-white focus:border-[#D4A373] transition">
+                            <input type="text" id="spend-desc-${index}" placeholder="消費名稱" class="w-[35%] text-xs border border-stone-200 rounded p-2 outline-none focus:border- focus:ring-1 focus:ring- transition">
+                            <input type="number" id="spend-amt-${index}" placeholder="金額" class="w-[25%] text-xs border border-stone-200 rounded p-2 outline-none focus:border- focus:ring-1 focus:ring- transition">
+                            <select id="spend-method-${index}" class="w-[20%] text-[11px] font-bold text-stone-600 border border-stone-200 rounded p-1.5 outline-none bg-white focus:border- transition">
                                 <option value="cash">💵 現金</option>
                                 <option value="credit">💳 刷卡</option>
                             </select>
-                            <button onclick="app.addTransaction(${index})" class="w-[25%] text-xs bg-[#D4A373] hover:bg-[#C39262] text-white rounded p-1.5 transition shadow-sm font-bold tracking-wider">記帳</button>
+                            <button onclick="app.addTransaction(${index})" class="w-[20%] text-xs bg- hover:bg-[#C39262] text-white rounded p-1.5 transition shadow-sm font-bold tracking-wider">記帳</button>
                         </div>
                     `;
                     listContainer.appendChild(div);
@@ -1108,9 +1082,9 @@
                 const listContainer = document.getElementById(`${type}List`);
                 if(!listContainer) return;
 
-                const goals = type === 'presave' ? this.data.presaveGoals : this.data.savingsGoals;
-                const themeColor = type === 'presave' ? '#A3B18A' : '#E63946';
-                const hoverColor = type === 'presave' ? 'hover:border-[#A3B18A]' : 'hover:border-[#E63946]';
+                const goals = type === 'presave'? this.data.presaveGoals : this.data.savingsGoals;
+                const themeColor = type === 'presave'? '#A3B18A' : '#E63946';
+                const hoverColor = type === 'presave'? 'hover:border-' : 'hover:border-[#E63946]';
                 
                 let totalAllocated = this._getSum(goals, 'budget');
                 this._updateTabBadge(`${type}UnallocatedBadge`, poolAmount - totalAllocated);
@@ -1126,10 +1100,10 @@
                     let target = goal.target || 0;
                     let accumulated = goal.accumulated || 0;
                     let thisMonthBudget = goal.budget || 0;
-                    let ratio = goal.ratio !== undefined ? goal.ratio : 10;
+                    let ratio = goal.ratio!== undefined? goal.ratio : 10;
                     
                     let currentTotal = accumulated + thisMonthBudget;
-                    let progress = target > 0 ? Math.min(100, (currentTotal / target) * 100) : 0;
+                    let progress = target > 0? Math.min(100, (currentTotal / target) * 100) : 0;
                     let isCompleted = currentTotal >= target && target > 0;
 
                     const div = document.createElement('div');
@@ -1158,8 +1132,8 @@
                                     $ <input type="number" value="${target}" onchange="app.updateItemField('${type}', ${index}, 'target', this.value)" class="w-full bg-transparent focus:outline-none ml-1 text-sm md:text-base">
                                 </div>
                             </div>
-                            <div class="bg-stone-50 px-3 py-2 rounded-lg border border-stone-100 focus-within:border-[#D4A373] transition-colors" title="修改此欄位將影響未分配結餘水庫">
-                                <label class="text-[10px] text-stone-400 block font-bold text-[#D4A373]">已累積 (可手動修改)</label>
+                            <div class="bg-stone-50 px-3 py-2 rounded-lg border border-stone-100 focus-within:border- transition-colors" title="修改此欄位將影響未分配結餘水庫">
+                                <label class="text-[10px] text-stone-400 block font-bold text-">已累積 (可手動修改)</label>
                                 <div class="flex items-center text-stone-700 font-bold mt-1">
                                     $ <input type="number" value="${accumulated}" onchange="app.handleGoalFund('${type}', ${index}, this.value, ${accumulated})" class="w-full bg-transparent focus:outline-none ml-1 text-sm md:text-base">
                                 </div>
@@ -1178,10 +1152,10 @@
                         
                         <div class="relative pt-1">
                             <div class="overflow-hidden h-3 flex rounded-full bg-stone-100 shadow-inner">
-                                <div style="width:${progress}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-[${themeColor}] transition-all duration-700 ${isCompleted ? 'animate-pulse' : ''}"></div>
+                                <div style="width:${progress}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-[${themeColor}] transition-all duration-700 ${isCompleted? 'animate-pulse' : ''}"></div>
                             </div>
-                            <div class="text-right mt-1.5 text-xs font-bold ${isCompleted ? `text-[${themeColor}]` : 'text-stone-400'}">
-                                進度: ${progress.toFixed(1)}% ${isCompleted ? '🎉 恭喜達標！' : ''}
+                            <div class="text-right mt-1.5 text-xs font-bold ${isCompleted? `text-[${themeColor}]` : 'text-stone-400'}">
+                                進度: ${progress.toFixed(1)}% ${isCompleted? '🎉 恭喜達標！' : ''}
                             </div>
                         </div>
                     `;
@@ -1190,14 +1164,14 @@
             },
 
             updateGoalName(type, index, value) {
-                const goals = type === 'presave' ? this.data.presaveGoals : this.data.savingsGoals;
+                const goals = type === 'presave'? this.data.presaveGoals : this.data.savingsGoals;
                 goals[index].name = value || '未命名目標';
                 this.calculateAndSave();
             },
 
             removeGoal(type, index) {
                 this.showDialog('刪除目標', '確定要刪除這個目標嗎？\n注意：此目標內「已累積」的金額不會自動退回水庫。如果您希望退回，請先將「已累積」修改為 0 後再刪除。', 'confirm', () => {
-                    const goals = type === 'presave' ? this.data.presaveGoals : this.data.savingsGoals;
+                    const goals = type === 'presave'? this.data.presaveGoals : this.data.savingsGoals;
                     goals.splice(index, 1);
                     this.calculateAndSave();
                 });
@@ -1206,16 +1180,21 @@
             // --- Transactions ---
             addTransaction(index) {
                 const item = this.data.budgetItems[index];
+                const descInput = document.getElementById(`spend-desc-${index}`);
                 const amtInput = document.getElementById(`spend-amt-${index}`);
                 const methodSelect = document.getElementById(`spend-method-${index}`);
-                if(!amtInput || !methodSelect) return;
+                
+                if(!amtInput ||!methodSelect ||!descInput) return;
                 
                 const amount = Number(amtInput.value);
+                const itemName = descInput.value.trim() || '未命名消費';
+
                 if (amount > 0) {
                     const tx = {
                         id: Date.now(),
                         catId: item.id,
                         catName: item.name,
+                        itemName: itemName,
                         amount: amount,
                         method: methodSelect.value, 
                         date: new Date().toLocaleDateString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' })
@@ -1223,6 +1202,7 @@
                     this.data.transactions.push(tx);
                     this.calculateAndSave(); 
                     amtInput.value = '';
+                    descInput.value = '';
                 }
             },
 
@@ -1237,14 +1217,14 @@
                 const sortedTx = [...this.data.transactions].sort((a,b) => b.id - a.id);
 
                 sortedTx.forEach(tx => {
-                    const methodIcon = tx.method === 'credit' ? '💳' : '💵';
-                    const methodText = tx.method === 'credit' ? '刷卡' : '現金';
+                    const methodIcon = tx.method === 'credit'? '💳' : '💵';
+                    const methodText = tx.method === 'credit'? '刷卡' : '現金';
                     const div = document.createElement('div');
                     div.className = 'flex justify-between items-center py-3 border-b border-stone-100 last:border-0 hover:bg-stone-100 px-2 -mx-2 rounded transition-colors group';
                     div.innerHTML = `
                         <div>
-                            <div class="text-[10px] text-stone-400">${tx.date}</div>
-                            <div class="font-medium text-stone-700">${tx.catName}</div>
+                            <div class="text-[10px] text-stone-400">${tx.date} <span class="ml-1 px-1 bg-stone-200 rounded text-stone-600">${tx.catName}</span></div>
+                            <div class="font-bold text-stone-700 text-sm mt-0.5">${tx.itemName || tx.catName}</div>
                         </div>
                         <div class="text-right">
                             <div class="font-bold text-stone-800 text-base">${this.formatMoney(tx.amount)}</div>
@@ -1263,7 +1243,7 @@
 
             deleteTransaction(id) {
                 this.showDialog('🗑️ 刪除紀錄', '確定要刪除這筆支出紀錄嗎？\n刪除後該類別的預算餘額將會自動恢復。', 'confirm', () => {
-                    this.data.transactions = this.data.transactions.filter(tx => tx.id !== id);
+                    this.data.transactions = this.data.transactions.filter(tx => tx.id!== id);
                     this.calculateAndSave();
                 });
             },
@@ -1272,11 +1252,13 @@
                 if (!tx) return;
                 
                 const idEl = document.getElementById('editTxId');
+                const nameEl = document.getElementById('editTxItemName');
                 const amtEl = document.getElementById('editTxAmount');
                 const methodEl = document.getElementById('editTxMethod');
                 const modalEl = document.getElementById('editModal');
                 
                 if(idEl) idEl.value = tx.id;
+                if(nameEl) nameEl.value = tx.itemName || tx.catName;
                 if(amtEl) amtEl.value = tx.amount;
                 if(methodEl) methodEl.value = tx.method;
                 if(modalEl) modalEl.classList.remove('hidden');
@@ -1287,16 +1269,21 @@
             },
             saveEditTx() {
                 const idEl = document.getElementById('editTxId');
+                const nameEl = document.getElementById('editTxItemName');
                 const amtEl = document.getElementById('editTxAmount');
                 const methodEl = document.getElementById('editTxMethod');
-                if(!idEl || !amtEl || !methodEl) return;
+                
+                if(!idEl ||!amtEl ||!methodEl ||!nameEl) return;
                 
                 const id = Number(idEl.value);
+                const newName = nameEl.value.trim() || '未命名消費';
                 const newAmount = Number(amtEl.value);
                 const newMethod = methodEl.value;
+                
                 if (newAmount > 0) {
                     const txIndex = this.data.transactions.findIndex(t => t.id === id);
-                    if (txIndex !== -1) {
+                    if (txIndex!== -1) {
+                        this.data.transactions[txIndex].itemName = newName;
                         this.data.transactions[txIndex].amount = newAmount;
                         this.data.transactions[txIndex].method = newMethod;
                         this.closeEditModal();
@@ -1308,8 +1295,8 @@
             // --- Credit Card Logic ---
             calculateCC_And_Balance(totalBudgetAmt) {
                 const totalCreditSpend = this.data.transactions
-                    .filter(tx => tx.method === 'credit')
-                    .reduce((sum, tx) => sum + tx.amount, 0);
+                   .filter(tx => tx.method === 'credit')
+                   .reduce((sum, tx) => sum + tx.amount, 0);
                 
                 let currentPouch = Math.max(0, totalCreditSpend - (this.data.ccPaidAmount || 0));
                 const pouchEl = document.getElementById('ccPouchTotal');
@@ -1323,8 +1310,8 @@
 
             clearCCPouch() {
                 const totalCreditSpend = this.data.transactions
-                    .filter(tx => tx.method === 'credit')
-                    .reduce((sum, tx) => sum + tx.amount, 0);
+                   .filter(tx => tx.method === 'credit')
+                   .reduce((sum, tx) => sum + tx.amount, 0);
                 let currentPouch = Math.max(0, totalCreditSpend - (this.data.ccPaidAmount || 0));
 
                 if(currentPouch <= 0) {
@@ -1342,504 +1329,4 @@
             calculateResetPreview() {
                 let { budget: budgetPool, presave: presaveAmt, savings: savingsAmt } = this.currentPools;
                 
-                let totalSpent = this.data.transactions.reduce((sum, tx) => sum + tx.amount, 0);
-                let budgetBalance = Math.max(0, budgetPool - totalSpent);
-                
-                let presaveAllocated = this._getSum(this.data.presaveGoals, 'budget');
-                let presaveBalance = Math.max(0, presaveAmt - presaveAllocated);
-                
-                let savingsAllocated = this._getSum(this.data.savingsGoals, 'budget');
-                let savingsBalance = Math.max(0, savingsAmt - savingsAllocated);
-
-                // Add up all unspent budget + unallocated amounts in presave and savings
-                let totalToReservoir = budgetBalance + presaveBalance + savingsBalance;
-                
-                const monthEndEl = document.getElementById('monthEndBalance');
-                if(monthEndEl) monthEndEl.textContent = this.formatMoney(totalToReservoir);
-                
-                const expectedEl = document.getElementById('expectedReservoir');
-                if(expectedEl) expectedEl.textContent = this.formatMoney((this.data.unallocatedSavings || 0) + totalToReservoir);
-                
-                this.resetStats = { budgetPool, totalSpent, totalToReservoir };
-            },
-
-            resetMonth() {
-                let { budgetPool, totalSpent, totalToReservoir } = this.resetStats;
-
-                this.showDialog('🗓️ 月末結算確認', `即將執行月結算，系統會執行以下動作：\n\n1. 將所有目標中的「本月分配」正式寫入「已累積」中。\n2. 將所有未使用的額度共 <strong class="text-[#D4A373] text-lg">${this.formatMoney(totalToReservoir)}</strong> 匯入您的「未分配結餘水庫」。\n3. 將本月記帳明細 <strong class="text-stone-800">永久封存到歷史紀錄</strong>。\n4. 清空當月帳本與本月分配額。\n\n確認執行結算嗎？`, 'confirm', () => {
-                    
-                    const now = new Date();
-                    const monthStr = `${now.getFullYear()}年${now.getMonth() + 1}月`;
-                    
-                    let totalIncome = this.data.incomes.reduce((sum, item) => sum + (item.amount || 0), 0);
-                    let totalFixed = this.data.fixedExpenses.reduce((a,b)=>a+(b.amount||0),0);
-                    let totalDebt = this.data.hasDebt ? this.data.debts.reduce((a,b)=>a+(b.monthly||0),0) : 0;
-
-                    const historyPayload = {
-                        id: Date.now().toString(),
-                        timestamp: Date.now(),
-                        monthLabel: monthStr,
-                        income: totalIncome,
-                        fixed: totalFixed,
-                        debt: totalDebt,
-                        budgetPool: budgetPool,
-                        spent: totalSpent,
-                        savedThisMonth: totalToReservoir,
-                        transactions: [...this.data.transactions]
-                    };
-
-                    if (window.saveHistoryToCloud) {
-                        window.saveHistoryToCloud(historyPayload);
-                    } else {
-                        // 本地歷史紀錄備援
-                        this.historyRecords.push(historyPayload);
-                        localStorage.setItem('smart-budget-app-history', JSON.stringify(this.historyRecords));
-                    }
-
-                    // Move budget to accumulated
-                    this.data.presaveGoals.forEach(g => { g.accumulated += (g.budget || 0); g.budget = 0; });
-                    this.data.savingsGoals.forEach(g => { g.accumulated += (g.budget || 0); g.budget = 0; });
-
-                    // Update Unallocated Savings (Reservoir)
-                    this.data.unallocatedSavings = (this.data.unallocatedSavings || 0) + totalToReservoir;
-                    
-                    // Reset Flags
-                    this.data.isManualPresave = false;
-                    this.data.isManualSavings = false;
-
-                    // Clear Month Data
-                    this.data.transactions = [];
-                    this.data.ccPaidAmount = 0; 
-                    
-                    this.calculateAndSave();
-                    
-                    setTimeout(() => {
-                        this.showDialog('🎉 結算完成', `結算成功！\n目標進度已推進，且已將 ${this.formatMoney(totalToReservoir)} 存入您的結餘水庫。\n\n下個月的薪資已準備好重新分配，繼續朝目標邁進吧！`, 'alert', () => {
-                            this.switchTab('savings'); 
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                        });
-                    }, 300);
-                });
-            },
-
-            openHistoryModal() {
-                const modal = document.getElementById('historyModal');
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    this.renderHistoryList();
-                }
-            },
-            closeHistoryModal() {
-                const modal = document.getElementById('historyModal');
-                if (modal) modal.classList.add('hidden');
-            },
-            renderHistoryList() {
-                const container = document.getElementById('historyListContainer');
-                if (!container) return;
-                
-                if (this.historyRecords.length === 0) {
-                    container.innerHTML = `
-                        <div class="text-center text-stone-400 py-16 flex flex-col items-center">
-                            <span class="text-5xl mb-4">📭</span>
-                            <p class="font-bold text-lg text-stone-500">尚無歷史紀錄</p>
-                            <p class="text-sm mt-2">請在月底點擊最下方的「執行月結算」按鈕，<br>系統就會將當月紀錄封存到這裡喔！</p>
-                        </div>`;
-                    return;
-                }
-
-                container.innerHTML = '';
-                const sorted = [...this.historyRecords].sort((a,b) => b.timestamp - a.timestamp);
-
-                sorted.forEach((record, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'mb-4 bg-white border border-stone-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow';
-                    
-                    const header = document.createElement('div');
-                    header.className = 'p-5 flex justify-between items-center cursor-pointer hover:bg-stone-50 transition group';
-                    header.onclick = () => {
-                        const detail = document.getElementById(`hist-detail-${index}`);
-                        const icon = document.getElementById(`hist-icon-${index}`);
-                        if(detail) detail.classList.toggle('hidden');
-                        if(icon && detail) icon.style.transform = detail.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-                    };
-                    header.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center text-xl shadow-inner">📅</div>
-                            <div>
-                                <h4 class="font-bold text-stone-800 text-lg group-hover:text-[#D4A373] transition-colors">${record.monthLabel}</h4>
-                                <div class="text-xs text-stone-500 mt-0.5 font-medium">
-                                    總收入: ${this.formatMoney(record.income)} <span class="mx-1">|</span> 總支出: ${this.formatMoney(record.spent)}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-right flex items-center gap-4">
-                            <div>
-                                <div class="text-[10px] text-green-600 font-bold mb-0.5 uppercase tracking-wide">結餘匯入水庫</div>
-                                <div class="text-xl font-bold text-green-600 bg-green-50 px-3 py-1 rounded-lg">+${this.formatMoney(record.savedThisMonth)}</div>
-                            </div>
-                            <div id="hist-icon-${index}" class="text-stone-400 transition-transform duration-300">▼</div>
-                        </div>
-                    `;
-
-                    const details = document.createElement('div');
-                    details.id = `hist-detail-${index}`;
-                    details.className = 'hidden bg-white p-5 border-t border-stone-100';
-                    
-                    let txHtml = '';
-                    if (record.transactions && record.transactions.length > 0) {
-                        txHtml = `<div class="space-y-2 mt-3">`;
-                        record.transactions.forEach(tx => {
-                            const mIcon = tx.method === 'credit' ? '💳' : '💵';
-                            const mText = tx.method === 'credit' ? '刷卡' : '現金';
-                            txHtml += `
-                            <div class="flex justify-between items-center text-sm py-2 px-3 bg-stone-50 rounded-lg border border-stone-100">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-stone-700 font-medium">${tx.catName}</span> 
-                                    <span class="text-[10px] text-stone-500 bg-stone-200 px-1.5 py-0.5 rounded font-bold">${mIcon} ${mText}</span>
-                                </div>
-                                <span class="font-bold text-stone-800">${this.formatMoney(tx.amount)}</span>
-                            </div>`;
-                        });
-                        txHtml += `</div>`;
-                    } else {
-                        txHtml = `<div class="text-sm text-stone-400 italic mt-3 bg-stone-50 p-4 rounded-lg text-center">本月無任何支出明細</div>`;
-                    }
-
-                    details.innerHTML = `
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm mb-6">
-                            <div class="bg-stone-50 p-3 rounded-lg border border-stone-100">
-                                <div class="text-xs text-stone-400 mb-1">固定支出總計</div>
-                                <div class="font-bold text-stone-700">${this.formatMoney(record.fixed)}</div>
-                            </div>
-                            <div class="bg-stone-50 p-3 rounded-lg border border-stone-100">
-                                <div class="text-xs text-stone-400 mb-1">負債月繳總計</div>
-                                <div class="font-bold text-stone-700">${this.formatMoney(record.debt)}</div>
-                            </div>
-                            <div class="bg-stone-50 p-3 rounded-lg border border-stone-100">
-                                <div class="text-xs text-stone-400 mb-1">生活費預算池</div>
-                                <div class="font-bold text-[#D4A373]">${this.formatMoney(record.budgetPool)}</div>
-                            </div>
-                        </div>
-                        <h5 class="font-bold text-stone-700 text-sm flex items-center gap-2 mb-2"><span class="text-lg">📋</span> 唯讀支出明細</h5>
-                        ${txHtml}
-                    `;
-
-                    card.appendChild(header);
-                    card.appendChild(details);
-                    container.appendChild(card);
-                });
-            },
-
-            // --- List Management ---
-            renderIncomeList() {
-                const container = document.getElementById('incomeList');
-                if(!container) return;
-                container.innerHTML = '';
-                this.data.incomes.forEach((item, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'flex gap-2 items-center';
-                    div.innerHTML = `
-                        <input type="text" value="${item.name}" onchange="app.updateIncome(${index}, 'name', this.value)" class="flex-1 input-std text-sm py-1.5" placeholder="項目名">
-                        <input type="number" value="${item.amount || ''}" onchange="app.updateIncome(${index}, 'amount', this.value)" class="w-24 input-std text-sm py-1.5" placeholder="金額">
-                        <button onclick="app.removeIncome(${index})" class="text-stone-300 hover:text-red-500 font-bold px-1 text-lg leading-none transition">&times;</button>
-                    `;
-                    container.appendChild(div);
-                });
-            },
-            renderFixedList() {
-                const container = document.getElementById('fixedList');
-                if(!container) return;
-                container.innerHTML = '';
-                this.data.fixedExpenses.forEach((item, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'flex gap-2 items-center';
-                    div.innerHTML = `
-                        <input type="text" value="${item.name}" onchange="app.updateFixed(${index}, 'name', this.value)" class="flex-1 input-std text-sm py-1.5" placeholder="項目名">
-                        <input type="number" value="${item.amount || ''}" onchange="app.updateFixed(${index}, 'amount', this.value)" class="w-24 input-std text-sm py-1.5" placeholder="金額">
-                        <button onclick="app.removeFixed(${index})" class="text-stone-300 hover:text-red-500 font-bold px-1 text-lg leading-none transition">&times;</button>
-                    `;
-                    container.appendChild(div);
-                });
-            },
-            renderDebtList() {
-                const container = document.getElementById('debtList');
-                if(!container) return;
-                container.innerHTML = '';
-                this.data.debts.forEach((item, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'bg-red-50 p-4 rounded-xl border border-red-100 mb-3 relative shadow-sm';
-                    div.innerHTML = `
-                        <div class="flex justify-between items-center mb-4">
-                            <input type="text" value="${item.name}" onchange="app.updateDebt(${index}, 'name', this.value)" class="bg-transparent border-b border-transparent hover:border-red-200 w-2/3 focus:outline-none focus:border-red-400 font-bold text-stone-800 text-lg transition-colors" placeholder="例如：學貸、信貸">
-                            <button onclick="app.removeDebt(${index})" class="text-red-400 hover:text-red-600 hover:bg-red-100 text-sm px-3 py-1.5 rounded-lg transition font-bold">刪除</button>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <label class="text-xs text-stone-500 font-bold block mb-1">每月應繳</label>
-                                <input type="number" value="${item.monthly || ''}" onchange="app.updateDebt(${index}, 'monthly', this.value)" class="w-full bg-white border border-red-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-300 transition">
-                            </div>
-                            <div>
-                                <label class="text-xs text-stone-500 font-bold block mb-1">剩餘本金</label>
-                                <input type="number" value="${item.principal || ''}" onchange="app.updateDebt(${index}, 'principal', this.value)" class="w-full bg-white border border-red-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-300 transition">
-                            </div>
-                            <div>
-                                <label class="text-xs text-stone-500 font-bold block mb-1">利率 (%)</label>
-                                <input type="number" step="0.01" value="${item.rate || ''}" onchange="app.updateDebt(${index}, 'rate', this.value)" class="w-full bg-white border border-red-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-300 transition">
-                            </div>
-                            <div>
-                                <label class="text-xs text-stone-500 font-bold block mb-1">剩餘期數 (月)</label>
-                                <input type="number" value="${item.terms || ''}" onchange="app.updateDebt(${index}, 'terms', this.value)" class="w-full bg-white border border-red-100 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-red-300 transition">
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-            },
-            addItem(type) {
-                if (type === 'income') {
-                    this.data.incomes.push({ id: 'inc-'+Date.now(), name: '新收入項目', amount: 0 });
-                    this.renderIncomeList();
-                    this.calculateAndSave();
-                } else if (type === 'fixed') {
-                    this.data.fixedExpenses.push({ name: '', amount: 0 });
-                    this.renderFixedList();
-                } else if (type === 'debt') {
-                    this.data.debts.push({ name: '新債務', principal: 0, rate: 0, monthly: 0, terms: 0 });
-                    this.renderDebtList();
-                    this.calculateAndSave();
-                } else if (type === 'budget') {
-                    this.data.isManualBudget = true; 
-                    this.data.budgetItems.push({ id: 'cat-'+Date.now(), name: '新類別', budget: 0, ratio: 10 });
-                    this.calculateAndSave();
-                } else if (type === 'presave') {
-                    this.data.presaveGoals.push({ id: 'ps-'+Date.now(), name: '新願望', target: 0, accumulated: 0, budget: 0, ratio: 10 });
-                    this.calculateAndSave();
-                } else if (type === 'savings') {
-                    this.data.savingsGoals.push({ id: 'sv-'+Date.now(), name: '新目標', target: 0, accumulated: 0, budget: 0, ratio: 10 });
-                    this.calculateAndSave();
-                }
-            },
-            updateIncome(index, field, value) {
-                this.data.incomes[index][field] = field === 'amount' ? Number(value) : value;
-                this.calculateAndSave();
-            },
-            removeIncome(index) {
-                this.showDialog('刪除收入', '確定要刪除這筆收入項目嗎？', 'confirm', () => {
-                    this.data.incomes.splice(index, 1);
-                    this.renderIncomeList();
-                    this.calculateAndSave();
-                });
-            },
-            updateBudgetItemName(index, newName) {
-                const validName = newName.trim() === '' ? '未命名類別' : newName.trim();
-                const catId = this.data.budgetItems[index].id;
-                this.data.budgetItems[index].name = validName;
-                this.data.transactions.forEach(tx => { if (tx.catId === catId) tx.catName = validName; });
-                this.calculateAndSave(); 
-            },
-            updateFixed(index, field, value) {
-                this.data.fixedExpenses[index][field] = field === 'amount' ? Number(value) : value;
-                this.calculateAndSave();
-            },
-            removeFixed(index) {
-                this.data.fixedExpenses.splice(index, 1);
-                this.renderFixedList();
-                this.calculateAndSave();
-            },
-            updateDebt(index, field, value) {
-                this.data.debts[index][field] = field === 'name' ? value : Number(value);
-                this.calculateAndSave();
-            },
-            removeDebt(index) {
-                this.showDialog('刪除債務', '確定要刪除這筆債務嗎？', 'confirm', () => {
-                    this.data.debts.splice(index, 1);
-                    this.renderDebtList();
-                    this.calculateAndSave();
-                });
-            },
-            removeBudgetItem(index) {
-                this.showDialog('刪除預算類別', '確定要刪除這個預算類別嗎？\n此操作將會一併刪除該類別下的所有當月記帳紀錄！', 'confirm', () => {
-                    const idToRemove = this.data.budgetItems[index].id;
-                    this.data.budgetItems.splice(index, 1);
-                    this.data.transactions = this.data.transactions.filter(tx => tx.catId !== idToRemove);
-                    this.data.isManualBudget = true; 
-                    this.calculateAndSave();
-                });
-            },
-            toggleDebtSection() {
-                this.data.hasDebt = !this.data.hasDebt;
-                const container = document.getElementById('debtContainer');
-                const btn = document.getElementById('debtToggleBtn');
-                const msg = document.getElementById('noDebtMessage');
-                if (this.data.hasDebt) {
-                    if(container) container.classList.remove('hidden');
-                    if(msg) msg.classList.add('hidden');
-                    if(btn) {
-                        btn.textContent = "切換為無負債";
-                        btn.classList.add('bg-red-100', 'text-red-600', 'font-bold');
-                    }
-                    if(this.data.debts.length === 0) this.addItem('debt');
-                } else {
-                    if(container) container.classList.add('hidden');
-                    if(msg) msg.classList.remove('hidden');
-                    if(btn) {
-                        btn.textContent = "我有負債";
-                        btn.classList.remove('bg-red-100', 'text-red-600', 'font-bold');
-                    }
-                }
-                this.calculateAndSave();
-            },
-            formatMoney(num) {
-                return new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(num);
-            }
-        };
-
-        // Initialize immediately
-        window.addEventListener('DOMContentLoaded', () => {
-            window.app.init();
-        });
-    </script>
-
-    <!-- FIREBASE MODULE -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, writeBatch, getDocs } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
-
-        let firebaseConfig = null;
-        try { if (typeof __firebase_config !== 'undefined') firebaseConfig = JSON.parse(__firebase_config); } catch(e) {}
-        
-        window.appId = typeof __app_id !== 'undefined' ? __app_id : 'smart-budget-app';
-        
-        const hideLoader = () => {
-            const loader = document.getElementById('loadingOverlay');
-            if (loader) {
-                loader.classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => loader.classList.add('hidden'), 300);
-            }
-        };
-        
-        if (firebaseConfig) {
-            try {
-                const firebaseApp = initializeApp(firebaseConfig);
-                window.auth = getAuth(firebaseApp);
-                window.db = getFirestore(firebaseApp);
-
-                window.saveStateToCloud = (data) => {
-                    if (window.db && window.user) {
-                        const stateRef = doc(window.db, 'artifacts', window.appId, 'users', window.user.uid, 'appData', 'state');
-                        setDoc(stateRef, data).catch(e => console.error(e));
-                    }
-                };
-
-                window.saveHistoryToCloud = async (historyPayload) => {
-                    if (window.db && window.user) {
-                        const historyRef = doc(window.db, 'artifacts', window.appId, 'users', window.user.uid, 'history', historyPayload.id);
-                        await setDoc(historyRef, historyPayload);
-                    }
-                };
-                
-                window.clearCloudHistory = async () => {
-                    if (window.db && window.user) {
-                        try {
-                            const historyCol = collection(window.db, 'artifacts', window.appId, 'users', window.user.uid, 'history');
-                            const snapshot = await getDocs(historyCol);
-                            const batch = writeBatch(window.db);
-                            snapshot.docs.forEach((document) => {
-                                batch.delete(document.ref);
-                            });
-                            await batch.commit();
-                        } catch(e) { console.error("Error clearing cloud history", e); }
-                    }
-                };
-
-                const initAuth = async () => {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(window.auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(window.auth);
-                    }
-                };
-
-                initAuth().then(() => {
-                    onAuthStateChanged(window.auth, async (u) => {
-                        window.user = u;
-                        if (u) {
-                            try {
-                                const stateRef = doc(window.db, 'artifacts', window.appId, 'users', u.uid, 'appData', 'state');
-                                const snap = await getDoc(stateRef);
-                                if (snap.exists()) {
-                                    const cData = snap.data();
-                                    
-                                    if(cData.salary !== undefined || cData.bonus !== undefined) {
-                                        if(!cData.incomes || cData.incomes.length === 0) {
-                                            cData.incomes = [
-                                                { id: 'inc-1', name: '月薪資 (實領)', amount: cData.salary || 0 },
-                                                { id: 'inc-2', name: '額外獎金/收入', amount: cData.bonus || 0 }
-                                            ];
-                                        }
-                                        delete cData.salary;
-                                        delete cData.bonus;
-                                    }
-                                    if(!cData.incomes) cData.incomes = [{ id: 'inc-1', name: '月薪資 (實領)', amount: 0 }];
-                                    if(cData.totalSavings && !cData.unallocatedSavings) cData.unallocatedSavings = cData.totalSavings;
-                                    if(!cData.presaveGoals) cData.presaveGoals = window.app.data.presaveGoals;
-                                    if(!cData.savingsGoals) cData.savingsGoals = window.app.data.savingsGoals;
-                                    if(cData.ccPaidAmount === undefined) cData.ccPaidAmount = 0;
-                                    if(!cData.masterRatios) cData.masterRatios = { budget: 50, presave: 20, savings: 30 };
-                                    
-                                    cData.presaveGoals.forEach(g => { 
-                                        if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
-                                    });
-                                    cData.savingsGoals.forEach(g => { 
-                                        if(g.current !== undefined) { g.accumulated = g.current; delete g.current; }
-                                    });
-
-                                    window.app.data = { ...window.app.data, ...cData };
-                                    
-                                    window.app.data.budgetItems.forEach(item => {
-                                        if(item.ratio === undefined) { const dc = defaultBudget.find(c => c.name === item.name); item.ratio = dc ? dc.ratio : 10; }
-                                        if(item.budget === undefined) item.budget = 0;
-                                    });
-                                    window.app.data.presaveGoals.forEach(item => {
-                                        if(item.ratio === undefined) item.ratio = 10;
-                                        if(item.budget === undefined) item.budget = 0;
-                                    });
-                                    window.app.data.savingsGoals.forEach(item => {
-                                        if(item.ratio === undefined) item.ratio = 10;
-                                        if(item.budget === undefined) item.budget = 0;
-                                    });
-                                }
-                            } catch (err) { console.error("Fetch state err", err); }
-                            
-                            try {
-                                const historyRef = collection(window.db, 'artifacts', window.appId, 'users', u.uid, 'history');
-                                onSnapshot(historyRef, (snapshot) => {
-                                    window.app.historyRecords = [];
-                                    snapshot.forEach(doc => window.app.historyRecords.push({ id: doc.id, ...doc.data() }));
-                                    const modalEl = document.getElementById('historyModal');
-                                    if(modalEl && !modalEl.classList.contains('hidden')) {
-                                        window.app.renderHistoryList();
-                                    }
-                                }, (err) => console.error("History listen error", err));
-                            } catch (err) { console.error("Set history listener err", err); }
-                            
-                            hideLoader();
-                            window.app.init();
-                        }
-                    });
-                }).catch(e => {
-                    console.error("Auth err", e);
-                    hideLoader();
-                });
-
-            } catch(e) {
-                console.error("Firebase init err", e);
-                hideLoader();
-            }
-        } else {
-            hideLoader();
-        }
-    </script>
-</body>
-</html>
+                let totalSpent = this.data.transactions.reduce((sum, tx) => sum + tx
